@@ -19,7 +19,6 @@ export default function AddPlaces({ updatingPost, post }) {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
-    creator: "mouhamed",
     title: "",
     message: "",
     tags: [],
@@ -37,7 +36,7 @@ export default function AddPlaces({ updatingPost, post }) {
         dispatch(updatePost(formData));
       } else {
         dispatch(CreatePost(formData));
-        setFormData({ creator: "mouhamed",
+        setFormData({
         title: "",
         message: "",
         tags: [],

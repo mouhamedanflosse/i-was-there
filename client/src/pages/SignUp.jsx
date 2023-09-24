@@ -5,11 +5,23 @@ import { useState } from "react";
 import { MdCancel, MdOutlineCheckCircle } from "react-icons/md";
 import { PiEyeBold, PiEyeClosedBold } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
+import {
+  useGoogleLogin,
+} from "@react-oauth/google";
+import CustomGoogleButton from "../component/GoogleButton";
+import { useDispatch } from "react-redux";
+import axios from "axios";
+import { actionType } from "../constants/actionType";
+import { signUp } from "../actions/auth";
+import { useLocation } from "react-router-dom";
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const [matchedpwd, setMatchedpwd] = useState("");
   const navigate = useNavigate();
+
+//   initializing dispatch
+ const dispatch = useDispatch()
 
   const cofRef = useRef();
   function clearInp() {
@@ -53,30 +65,67 @@ export default function SignUp() {
       }
       return errors;
     },
-    onSubmit: (values) => {
-        console.log(values);
-      },
+    onSubmit: async (values) => {
+      try {
+        dispatch(signUp(values,navigate))
+    } catch(err) {
+      console.log(err)
+    }
+    },
   });
-  console.log(cofRef.current.value)
+
+   // authenticate with google
+   const loginWithGoogle = useGoogleLogin({
+    onSuccess: async (response) => {
+      const profile = await fetchUserData(response.access_token);
+      navigate("/")
+    },
+  });
+
+  
+  // get the user data profile
+  const fetchUserData = async (accessToken) => {
+    try {
+      const response = await axios.get(
+        `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            Accept: "application/json",
+          },
+        }
+      );
+      dispatch({
+        type: actionType.logIN,
+        data: { ...response.data, Token: accessToken },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <div className="mx-auto mt-12 w-fit">
       <Card color="transparent" shadow={false}>
         <Typography className="text-center" variant="h4" color="blue-gray">
           Sign in
         </Typography>
-        <form onSubmit={formik.handleSubmit} className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96">
+        <form
+          onSubmit={formik.handleSubmit}
+          className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96"
+        >
           <div className="flex flex-col justify-center gap-2">
-            <div className="flex flex-col Xsm:flex-row gap-4">
+            <div className="flex  gap-4">
               <div className="flex flex-col justify-between">
-                <p className="text-red-600 text-[14px] font-semibold ml-3">
+                <p className="text-red-600 text-[12px] mb-[2px]  font-semibold ml-1">
                   {formik.touched.firstName && formik.errors.emtpyfirstName}
                 </p>
-                <p className="text-red-600 text-[14px] font-semibold ml-3">
+                <p className="text-red-600 text-[12px] mb-[2px] font-semibold ml-1">
                   {formik.errors.firstNameError}
                 </p>
                 <Input
                   id="firstName"
                   name="firstName"
+                  className="input"
                   size="md"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -85,17 +134,17 @@ export default function SignUp() {
                 />
               </div>
               <div className="flex flex-col justify-between">
-                <p className="text-red-600 text-[14px] font-semibold ml-3">
+                <p className="text-red-600 text-[12px] mb-[2px] font-semibold ml-1">
                   {formik.touched.lastName && formik.errors.emtpylastName}
                 </p>
-                <p className="text-red-600 text-[14px] font-semibold ml-3">
+                <p className="text-red-600 text-[12px] mb-[2px] font-semibold ml-1">
                   {formik.errors.lastNameError}
                 </p>
                 <Input
                   id="lastName"
                   name="lastName"
                   size="md"
-                //   className="min-w-[140px]"
+                  className="input"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.lastName}
@@ -104,10 +153,10 @@ export default function SignUp() {
               </div>
             </div>
             <div>
-              <p className="text-red-600 text-[14px] font-semibold mb-2 ml-3">
+              <p className="text-red-600 text-[12px] mb-[2px] font-semibold ml-1">
                 {formik.touched.Email && formik.errors.emtpyUser}
               </p>
-              <p className="text-red-600 text-[14px] font-semibold mb-2 ml-3">
+              <p className="text-red-600 text-[12px] mb-[2px] font-semibold ml-1">
                 {formik.errors.Email}
               </p>
               <Input
@@ -121,10 +170,10 @@ export default function SignUp() {
               />
             </div>
             <div className="relative">
-              <p className="text-red-600 text-[14px] font-semibold mb-2 ml-3">
+              <p className="text-red-600 text-[12px] mb-[2px] font-semibold ml-1">
                 {formik.touched.password && formik.errors.emtpyPassword}
               </p>
-              <p className="text-red-600 text-[14px] font-semibold mb-2 ml-3">
+              <p className="text-red-600 text-[12px] mb-[2px] font-semibold ml-1">
                 {formik.errors.passwordError}
               </p>
               <Input
@@ -152,7 +201,7 @@ export default function SignUp() {
               </div>
             </div>
             <div className="relative">
-              <p className="text-red-600 text-[14px] font-semibold mb-2 ml-3">
+              <p className="text-red-600 text-[12px] mb-[2px] font-semibold ml-1">
                 {formik.touched.passwordConfirm &&
                   formik.errors.emtpypasswordConfirm}
               </p>
@@ -184,6 +233,7 @@ export default function SignUp() {
           <Button type="submit" className="mt-6" fullWidth>
             sign up
           </Button>
+          <CustomGoogleButton login={loginWithGoogle} />
           <Typography color="gray" className="mt-4 text-center font-normal">
             already have an account?{" "}
             <span

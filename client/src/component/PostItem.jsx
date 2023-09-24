@@ -19,26 +19,26 @@ import staticData from "../assets/svg/likeAnimationStatic.json";
 import { TbEdit } from "react-icons/tb";
 import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
-import { deletePost, likePost, unlikePost } from "../actions/posts";
+import { deletePost, likePost } from "../actions/posts";
 import { useEffect } from "react";
 import { getPosts } from "../actions/posts";
 import AddPlaces from "./AddPlaces";
-import user from "../assets/test.webp";
-import Moment from "react-moment";
+import user from "../assets/test.webp"
 
-export default function PostItem({ postItem, index }) {
+export default function PostItem({ postItem, index, }) {
   const [likeStatus, setlikeStatus] = useState(true);
   const [openedMenu, setOpenedMenu] = useState(false);
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
+  const [userProfile, setUserProfile] = useState();
 
   const dispatch = useDispatch();
 
-  // initailizing dispatch
-
   useEffect(() => {
     dispatch(getPosts);
+    setUserProfile(JSON.parse(localStorage.getItem("profile")))
   }, [dispatch]);
+
 
   const handleOpen = () => setOpen(!open);
 
@@ -51,29 +51,26 @@ export default function PostItem({ postItem, index }) {
       console.log(err);
     }
   };
-  // ---------like post
+  // --------------like post
   const likepostItem = async () => {
     try {
-      setlikeStatus(false);
+      setlikeStatus((prevState) => !prevState);
       dispatch(likePost(postItem._id));
     } catch (err) {
       console.log(err);
     }
   };
-  // ---------unlike post
-  const unlikepostItem = async () => {
-    try {
-      setlikeStatus(true);
-      dispatch(unlikePost(postItem._id));
-    } catch (err) {
-      console.log(err);
-    }
-  };
+
+  // checkinf for like status
+  const likechecking = () => {
+    const liked = postItem.likes.find((like) => like === userProfile.result._id || userProfile.result._googleId )
+  } 
+
   return (
     postItem && (
       <motion.div
         transition={{ delay: 0.1 * index >= 1 ? 1 : 0.1 * index }}
-        initial={{ opacity: 0, scale: 0.8 }}
+        initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
       >
         {openedMenu && (
@@ -110,10 +107,9 @@ export default function PostItem({ postItem, index }) {
             <div className="absolute h-full w-full bg-blue-gray-900 opacity-50 "></div>
             <p className="bg-transparent absolute top-2 left-4">
               {moment(postItem.createdAt).fromNow()}
-             </p>
-             {/* <Moment fromNow>{postItem.createdAt}</Moment> */}
+            </p>
             <div className="absolute items-center flex gap-1 bottom-5 left-2">
-              <img 
+              <img
                 src={user}
                 alt={postItem.creator}
                 className="w-9 h-9 rounded-full"
@@ -160,18 +156,17 @@ export default function PostItem({ postItem, index }) {
                       onClick={() => likepostItem()}
                       className="text-[27px] ml-[2px] cursor-pointer ease-in-out duration-300  text-[#08764e]"
                     />
-                  )
-                  //  : postItem.likeCount !== 0 ? (
-                  //   <Lottie
-                  //     onClick={() => unlikepostItem()}
-                  //     loop={false}
-                  //     className="text-[25px] -top-1 left-0 cursor-pointer scale-[6] w-8 absolute"
-                  //     animationData={staticData}
-                  //   />
-                  // )
-                   : (
+                  ) : (
+                    //  : postItem.likeCount !== 0 ? (
+                    //   <Lottie
+                    //     onClick={() => unlikepostItem()}
+                    //     loop={false}
+                    //     className="text-[25px] -top-1 left-0 cursor-pointer scale-[6] w-8 absolute"
+                    //     animationData={staticData}
+                    //   />
+                    // )
                     <Lottie
-                      onClick={() => unlikepostItem()}
+                      onClick={() => likepostItem()}
                       loop={false}
                       className="text-[25px] -top-1 left-0 cursor-pointer scale-[6] w-8 absolute"
                       animationData={animationData}

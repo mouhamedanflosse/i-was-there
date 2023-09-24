@@ -1,5 +1,4 @@
 html {
-    background-color: #08764e;
     background-color: #eee;
     margin: 0;
     padding: 0;
@@ -21,4 +20,8 @@ input[type="file" i]::-webkit-file-upload-button{
 }
 .staticElemet {
     position: static;
+}
+
+div:has(.input) {
+    min-width: 150px;
 }

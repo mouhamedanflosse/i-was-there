@@ -1,4 +1,5 @@
 import express from "express";
+import auth from "../middleware/auth.js";
 
 import postsContoroller from "../controllers/posts.js";
 
@@ -6,16 +7,14 @@ const route = express.Router();
 
 route.get("/", postsContoroller.getPosts);
 
-route.post("/", postsContoroller.createPost);
+route.post("/", auth, postsContoroller.createPost);
 
-route.delete("/:id", postsContoroller.DeletePost);
+route.delete("/:id", auth, postsContoroller.DeletePost);
 
-route.patch("/:id", postsContoroller.updatePost);
+route.patch("/:id", auth, postsContoroller.updatePost);
+
+route.patch("/likePost/:id", auth, postsContoroller.likePost);
 
 route.get("/:id", postsContoroller.getPostsById);
-
-route.patch("/likePost/:id", postsContoroller.likePost);
-
-route.patch("/unlikePost/:id", postsContoroller.unlikePost);
 
 export default route;

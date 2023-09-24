@@ -3,7 +3,7 @@ import psotsMessage from "../model/postsSchema.js";
 import createHttpError from "http-errors";
 
 const postsContoroller = {
-  getPosts: async (req, res, next) => {
+  getPosts: async (req, res,next) => {
     try {
       const posts = await psotsMessage.find({}, { __v: 0 });
       res.send(posts);
@@ -26,10 +26,13 @@ const postsContoroller = {
       next(createHttpError(err))
     }
   },
-  createPost: async (req, res, next) => {
+  createPost: async (req,res,next) => {
     const post = req.body;
-    const newPost = new psotsMessage(post);
     try {
+      if (!req.userId) {
+        return res.send({message : "please sign in"});
+      }
+      const newPost = new psotsMessage({...post,creator : req.userId,createdAt : new Date().toISOString()});
       const post = await newPost.save();
       res.send(post);
     } catch (err) {
@@ -40,7 +43,7 @@ const postsContoroller = {
       next(err);
     }
   },
-  DeletePost: async (req, res, next) => {
+  DeletePost: async (req, res,next) => {
     const id = req.params.id;
     try {
       const post = await psotsMessage.findByIdAndDelete(id) ;
@@ -74,35 +77,25 @@ const postsContoroller = {
       next(createHttpError(err));
     }
   },
-  likePost: async (req, res, next) => {
+  likePost: async (req,res,next) => {
     const id = req.params.id;
     try {
-      const post = await psotsMessage.findById(id, { __v: 0 })
-      const likedPost = await psotsMessage.findByIdAndUpdate(id,{likeCount : post.likeCount + 1} ,{new : true}) ;
+      if (!req.userId) {
+        throw createHttpError(401, "please log in")
+      }
+      const post = await psotsMessage.findById(id)
       if (!post) {
         throw createHttpError(404, "post does not exist")
       }
+      const index = post.likes.findIndex((id) => id === String(req.userId))
+      if (index === -1 ) {
+        post.likes.push(req.userId)
+      } else {
+        post.likes = post.likes.filter((id) => id !== String(req.userId))
+      }
+      const likedPost = await psotsMessage.findByIdAndUpdate(id,post,{new : true}) ;
       res.send(likedPost);
     } catch (err) {
-      console.log(err.message)
-      if (err instanceof mongoose.CastError) {
-        next(createHttpError(422, "invalid id"));
-        return;
-      }
-      next(createHttpError(err));
-    }
-  },
-  unlikePost: async (req, res, next) => {
-    const id = req.params.id;
-    try {
-      const post = await psotsMessage.findById(id, { __v: 0 })
-      const likedPost = await psotsMessage.findByIdAndUpdate(id,{likeCount : post.likeCount - 1 <= 0 ? 0 : post.likeCount - 1} ,{new : true}) ;
-      if (!post) {
-        throw createHttpError(404, "post does not exist")
-      }
-      res.send(likedPost);
-    } catch (err) {
-      console.log(err.message)
       if (err instanceof mongoose.CastError) {
         next(createHttpError(422, "invalid id"));
         return;
