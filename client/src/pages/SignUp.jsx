@@ -1,27 +1,34 @@
-import { Card, Input, Button, Typography } from "@material-tailwind/react";
+import {
+  Card,
+  Input,
+  Button,
+  Typography,
+  Spinner,
+} from "@material-tailwind/react";
 import { useFormik } from "formik";
 import { useRef } from "react";
 import { useState } from "react";
 import { MdCancel, MdOutlineCheckCircle } from "react-icons/md";
 import { PiEyeBold, PiEyeClosedBold } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
-import {
-  useGoogleLogin,
-} from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 import CustomGoogleButton from "../component/GoogleButton";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { actionType } from "../constants/actionType";
-import { signUp } from "../actions/auth";
-import { useLocation } from "react-router-dom";
+import { signUp } from "../actions/auth"
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const [matchedpwd, setMatchedpwd] = useState("");
+
+  // submiting state
+  const [submiting, setSubmiting] = useState(false);
+
   const navigate = useNavigate();
 
-//   initializing dispatch
- const dispatch = useDispatch()
+  //   initializing dispatch
+  const dispatch = useDispatch();
 
   const cofRef = useRef();
   function clearInp() {
@@ -31,7 +38,7 @@ export default function SignUp() {
   // validate from fields
   const formik = useFormik({
     initialValues: {
-      Email: "",
+      email: "",
       password: "",
       passwordConfirm: "",
       firstName: "",
@@ -47,10 +54,10 @@ export default function SignUp() {
         errors.emtpylastName = "this field can not be empty";
       } else if (!/^[^-\s][a-zA-Z0-9_\s-]{2,}$/.test(values.lastName)) {
         errors.lastNameError = "3 element at least";
-      } else if (!values.Email) {
+      } else if (!values.email) {
         errors.emtpyUser = "this field can not be empty";
-      } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(values.Email)) {
-        errors.Email = "invalid Email";
+      } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(values.email)) {
+        errors.email = "invalid Email";
       } else if (!values.password) {
         errors.emtpyPassword = "this field can not be empty";
       } else if (!/^[^-\s][a-zA-Z0-9_\s-]{7,}$/.test(values.password)) {
@@ -67,22 +74,23 @@ export default function SignUp() {
     },
     onSubmit: async (values) => {
       try {
-        dispatch(signUp(values,navigate))
-    } catch(err) {
-      console.log(err)
-    }
+        setSubmiting(true);
+        dispatch(signUp(values, navigate));
+        setSubmiting(false);
+      } catch (err) {
+        console.log(err);
+      }
     },
   });
 
-   // authenticate with google
-   const loginWithGoogle = useGoogleLogin({
+  // authenticate with google
+  const loginWithGoogle = useGoogleLogin({
     onSuccess: async (response) => {
+      console.log(response.access_token);
       const profile = await fetchUserData(response.access_token);
-      navigate("/")
     },
   });
 
-  
   // get the user data profile
   const fetchUserData = async (accessToken) => {
     try {
@@ -96,7 +104,7 @@ export default function SignUp() {
         }
       );
       dispatch({
-        type: actionType.logIN,
+        type: actionType.AUTH,
         data: { ...response.data, Token: accessToken },
       });
     } catch (error) {
@@ -154,18 +162,18 @@ export default function SignUp() {
             </div>
             <div>
               <p className="text-red-600 text-[12px] mb-[2px] font-semibold ml-1">
-                {formik.touched.Email && formik.errors.emtpyUser}
+                {formik.touched.email && formik.errors.emtpyUser}
               </p>
               <p className="text-red-600 text-[12px] mb-[2px] font-semibold ml-1">
-                {formik.errors.Email}
+                {formik.errors.email}
               </p>
               <Input
-                id="Email"
-                name="Email"
+                id="email"
+                name="email"
                 size="lg"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.Email}
+                value={formik.values.email}
                 label="Email"
               />
             </div>
@@ -186,7 +194,7 @@ export default function SignUp() {
                 size="lg"
                 label="Password"
               />
-              <div className={` cursor-pointer bottom-4 right-3 absolute `}>
+              <div className={`cursor-pointer bottom-4 right-3 absolute `}>
                 {!showPassword ? (
                   <PiEyeClosedBold
                     onClick={() => setShowPassword((prevState) => !prevState)}
@@ -231,7 +239,7 @@ export default function SignUp() {
             </div>
           </div>
           <Button type="submit" className="mt-6" fullWidth>
-            sign up
+            {submiting ? <Spinner className="w-6" color="white" /> : "sign up"}
           </Button>
           <CustomGoogleButton login={loginWithGoogle} />
           <Typography color="gray" className="mt-4 text-center font-normal">

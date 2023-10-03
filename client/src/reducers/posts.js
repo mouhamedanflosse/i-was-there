@@ -1,15 +1,29 @@
- const posts =  (posts = [], action) => {
+const posts = (state = { loading: false }, action) => {
   switch (action.type) {
+    case "start_loading":
+      return { ...state, loading: true };
+    case "end_loading":
+      return { ...state, loading: false };
     case "update":
-      return posts.map((item) => item._id === action.payload._id ? action.payload : item);
+      return {
+        ...state,
+        posts: state.posts.map((item) =>
+          item._id === action.payload._id ? action.payload : item
+        ),
+      };
     case "delete":
-      return posts.filter((item) => item._id !== action.payload._id);
+      return {
+        ...state,
+        posts: state.posts.filter((item) => item._id !== action.payload._id),
+      };
     case "fetch_all":
-      return action.payload;
+      return { ...state, ...action.payload };
+    case "search":
+      return { ...state, ...action.payload };
     case "create":
-      return [...posts,action.payload];
+      return { ...state, posts: [action.payload, ...state.posts] };
     default:
-      return posts;
+      return state;
   }
 };
-export default posts
+export default posts;

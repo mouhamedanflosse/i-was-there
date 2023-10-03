@@ -1,33 +1,35 @@
 import { ThemeProvider } from "@material-tailwind/react";
 import "./App.css";
 import Header from "./component/Header";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getPosts } from "./actions/posts";
 import { useSelector } from "react-redux";
-import Posts from "./pages/Posts";
+import Home from "./pages/Home"
 import SignUp from "./pages/SignUp";
-import  SignIn  from "./pages/auth";
+import SignIn from "./pages/auth"
+import Details from "./pages/Details";
 
 function App() {
-  const dispatch = useDispatch();
-  const posts = useSelector((state) => state.posts);
+  const [UserProfile, setUserProfile] = useState(null);
 
   // -----------useEffect
   useEffect(() => {
-    dispatch(getPosts());
-  }, [dispatch]);
-console.log(posts)
+    setUserProfile(JSON.parse(localStorage.getItem("profile")));
+  }, []);
   return (
     <ThemeProvider>
       <BrowserRouter>
         <div className="max-w-6xl w-full mx-auto">
           <Header />
           <Routes>
-            <Route path="/Sign-in" element={<SignIn />} />
-            <Route path="/Sign-up" element={<SignUp />} />
-            <Route path="/" element={<Posts />} />
+            <Route path="/" element={<Navigate to="/posts?page=1" replace/>} />
+            <Route path="/posts" element={<Home />} />
+            <Route path="/posts/search" element={<Home />} />
+            <Route path="/post/Details/:id" element={<Details UserProfile={UserProfile}/>} />
+            <Route path="/Sign-in" element={!UserProfile ? <SignIn /> : <Navigate to="/posts" replace/>} />
+            <Route path="/Sign-up" element={!UserProfile ? <SignUp /> : <Navigate to="/posts" replace/>} />
           </Routes>
         </div>
       </BrowserRouter>

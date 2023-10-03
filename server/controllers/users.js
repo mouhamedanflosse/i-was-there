@@ -3,50 +3,65 @@ import createHttpError from "http-errors";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-const usersContoroller = {
+const usersController = {
   signIn: async (req, res, next) => {
-    const { Email, password } = req.body;
+    const { email, password } = req.body;
+    
     try {
-      const result = await users.findOne({ email : Email });
+      const result = await users.findOne({ email });
+
       if (!result) {
         throw createHttpError(404, "Email does not exist");
       }
-      const isPasswordCorrect = bcrypt.compare(
-        password,
-        result.password
-      );
+
+      const isPasswordCorrect = await bcrypt.compare(password, result.password);
+
       if (!isPasswordCorrect) {
-        throw createHttpError(404, "password is incorrect");
+        throw createHttpError(401, "Incorrect password");
       }
-      const token = jwt.sign(
-        { email: result.email, id: result._id },
-        "test",
-        { expiresIn: "1h" }
-      );
-      res.send({result,token});
-    } catch (err) {
-      next(createHttpError(err));
+
+      const token = generateAuthToken(result);
+
+      res.status(200).json({ result, token });
+    } catch (error) {
+      next(error);
     }
   },
-  signUp:  async (req, res, next) => {
-        const { Email, password,firstName,lastName} = req.body;
-        try {
-          const userExistence = await users.findOne({ Email });
-          if (userExistence) {
-            throw createHttpError(404, "Email is already exist");
-          }
-          const hashedPassword = await bcrypt.hash(password,12)
-          const result = await users.create({email : Email,password : hashedPassword, name :`${firstName} ${lastName}`})
 
-          const token = jwt.sign(
-            { email: Email, id: result._id },
-            "test",
-            { expiresIn: "1h" }
-          );
-          res.send({result,token});
-        } catch (err) {
-          next(createHttpError(err));
-        }
-      },
+  signUp: async (req, res, next) => {
+    const { email, password, firstName, lastName } = req.body;
+
+    try {
+      const userExistence = await users.findOne({ email });
+
+      if (userExistence) {
+        throw createHttpError(409, "Email is already in use");
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 12);
+
+      const newUser = await users.create({
+        email,
+        password: hashedPassword,
+        name: `${firstName} ${lastName}`,
+      });
+
+      const token = generateAuthToken(newUser);
+
+      res.status(201).json({ result: newUser, token });
+    } catch (error) {
+      next(error);
+    }
+  },
 };
-export default usersContoroller;
+
+const generateAuthToken = (user) => {
+  const token = jwt.sign(
+    { email: user.email, id: user._id },
+    process.env.JWT_SECRET, // Use a secure, environment-specific secret key
+    { expiresIn: "1h" }
+  );
+  return token;
+};
+
+export default usersController;

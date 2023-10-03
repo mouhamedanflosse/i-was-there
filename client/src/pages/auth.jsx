@@ -1,4 +1,10 @@
-import { Card, Input, Button, Typography } from "@material-tailwind/react";
+import {
+  Card,
+  Input,
+  Button,
+  Typography,
+  Spinner,
+} from "@material-tailwind/react";
 import { useFormik } from "formik";
 import { useState } from "react";
 import { PiEyeBold, PiEyeClosedBold } from "react-icons/pi";
@@ -8,11 +14,13 @@ import CustomGoogleButton from "../component/GoogleButton";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { actionType } from "../constants/actionType";
-import { signIn } from "../actions/auth";
+import { signIn } from "../actions/auth"
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
-  const [usercediantials, setUsercediantials] = useState();
+
+  // submiting state
+  const [submiting, setSubmiting] = useState(false);
 
   const dispatch = useDispatch();
   // initialize useNvigate
@@ -20,15 +28,15 @@ export default function SignIn() {
   // validate from fields
   const formik = useFormik({
     initialValues: {
-      Email: "",
+      email: "",
       password: "",
     },
     validate: (values) => {
       let errors = {};
-      if (!values.Email) {
+      if (!values.email) {
         errors.emtpyUser = "this field can not be empty";
-      } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(values.Email)) {
-        errors.Email = "invalid Email";
+      } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(values.email)) {
+        errors.email = "invalid email";
       } else if (!values.password) {
         errors.emtpyPassword = "this field can not be empty";
       } else if (!/^[^-\s][a-zA-Z0-9_\s-]{7,}$/.test(values.password)) {
@@ -38,13 +46,12 @@ export default function SignIn() {
     },
     onSubmit: async (values) => {
       try {
-        dispatch(signIn(values, navigate));
+        await dispatch(signIn(values, navigate));
       } catch (err) {
         console.log(err);
       }
     },
   });
-
   // authenticate with google
   const loginWithGoogle = useGoogleLogin({
     onSuccess: async (response) => {
@@ -66,10 +73,9 @@ export default function SignIn() {
         }
       );
       dispatch({
-        type: actionType.logIN,
-        data: { ...response.data, Token: accessToken },
+        type: actionType.AUTH,
+        data: { result: response.data, token: accessToken },
       });
-      console.log(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -88,18 +94,18 @@ export default function SignIn() {
           <div className="mb-4 flex flex-col gap-6">
             <div>
               <p className="text-red-600 text-[14px] font-semibold mb-2 ml-3">
-                {formik.touched.Email && formik.errors.emtpyUser}
+                {formik.touched.email && formik.errors.emtpyUser}
               </p>
               <p className="text-red-600 text-[14px] font-semibold mb-2 ml-3">
-                {formik.errors.Email}
+                {formik.errors.email}
               </p>
               <Input
-                id="Email"
-                name="Email"
+                id="email"
+                name="email"
                 size="lg"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.Email}
+                value={formik.values.email}
                 label="Email"
               />
             </div>
@@ -136,7 +142,7 @@ export default function SignIn() {
             </div>
           </div>
           <Button type="submit" className="mt-6" fullWidth>
-            sign in
+            {submiting ? <Spinner className="w-6" color="white" /> : "sign in"}
           </Button>
           <CustomGoogleButton login={loginWithGoogle} />
           <Typography color="gray" className="mt-4 text-center font-normal">

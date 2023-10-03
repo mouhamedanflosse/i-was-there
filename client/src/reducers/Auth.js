@@ -1,4 +1,4 @@
-import { actionType } from "../constants/actionType";
+import { actionType } from "../constants/actionType"
 const auth = (auth = { authData: null }, action) => {
   switch (action.type) {
     case actionType.AUTH:
@@ -12,3 +12,6 @@ const auth = (auth = { authData: null }, action) => {
   }
 };
 export default auth;
+
+
+

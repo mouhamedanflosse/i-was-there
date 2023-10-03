@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Dialog,
@@ -8,9 +8,11 @@ import {
 import { TbLogout } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import jwt_decode from "jwt-decode";
 import { actionType } from "../constants/actionType";
 
-export default function SignOut() {
+export default function SignOut({UserProfile,location}) {
+
   // --------------------------open popup
   const [open, setOpen] = useState(false);
 
@@ -22,17 +24,23 @@ export default function SignOut() {
   const navigate = useNavigate();
 
   // ------------------logOut
-  const dispatch = useDispatch()
-  const logOUt = () => {
-    dispatch({type : actionType.logOut})
-    handleOpen()
-    navigate("/")
-  }
+  const dispatch = useDispatch();
+  const logOUt =  async () => {
+    handleOpen();
+    await dispatch({ type: actionType.logOut });
+    navigate("/");
+  };
+  // ----------useEffect
+  useEffect(() => {
+    if (jwt_decode(UserProfile?.token)?.exp * 1000 < new Date().getTime()) {
+      logOUt()
+    }
+  },[location]) 
   return (
     <>
       <button
         onClick={handleOpen}
-        className="flex mt-1 select-none mx-auto items-center bg-purple-900 border border-gray-300 rounded-lg shadow-md px-3 py-2 text-sm font-medium text-white hover:bg-[#43034a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+        className="flex mt-1 select-none mx-auto items-center bg-purple-900 border border-gray-300 rounded-lg shadow-md px-3 py-2 text-sm font-medium text-white hover:bg-[#43034a]"
       >
         <TbLogout className="text-[20px] mr-1 my-0" />
         <span>sign Out</span>

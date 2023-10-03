@@ -15,14 +15,16 @@ import { useDispatch } from "react-redux";
 import { VscAdd } from "react-icons/vsc";
 import { useEffect } from "react";
 
-export default function AddPlaces({ updatingPost, post }) {
+export default function AddPlaces({ updatingPost, post}) {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
+  // const user = UserProfile.result
   const [formData, setFormData] = useState({
     title: "",
     message: "",
     tags: [],
     selectedFile: "",
+    name : JSON.parse(localStorage.getItem("profile"))?.result?.name,
   });
   const handleOpen = () => setOpen((cur) => !cur);
 
@@ -40,7 +42,9 @@ export default function AddPlaces({ updatingPost, post }) {
         title: "",
         message: "",
         tags: [],
-        selectedFile: "",})
+        selectedFile: "",
+        name : JSON.parse(localStorage.getItem("profile"))?.result?.name 
+      })
       }
     } catch (err) {
       console.log(err);
@@ -50,13 +54,14 @@ export default function AddPlaces({ updatingPost, post }) {
   useEffect(() => {
     if (updatingPost) {
       handleOpen();
-      setFormData(post);
+      setFormData({...post,name : JSON.parse(localStorage.getItem("profile"))?.result?.name || JSON.parse(localStorage.getItem("profile")).name });
+      // setFormData({...post,name : UserProfile?.name });
     }
   }, [updatingPost]);
 
   return (
     <div className="relative">
-      {!updatingPost && (
+      {!updatingPost && formData.name && (
         <div className="fixed mb-7 z-50 top-[80vh] h-20 mx-auto w-20 right-[30px]  rounded-full">
           <Button
             className="hover:shadow-none shadow-sm relative text-[40px] rounded-full flex items-center w-14 h-14  justify-center hover:bg-[#3b3a3a]"

@@ -9,6 +9,7 @@ module.exports = withMT({
         Xemd: "845px",
         Xxmd: "787px",
         Xsm: "450px",
+        mdC: "500px",
         Xsmd: "633px",
         FS: "100%",
       },

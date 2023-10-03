@@ -7,6 +7,8 @@ const route = express.Router();
 
 route.get("/", postsContoroller.getPosts);
 
+route.get("/search", postsContoroller.getPostsBysearch);
+
 route.post("/", auth, postsContoroller.createPost);
 
 route.delete("/:id", auth, postsContoroller.DeletePost);

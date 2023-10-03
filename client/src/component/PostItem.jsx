@@ -8,7 +8,6 @@ import {
   DialogHeader,
   DialogFooter,
 } from "@material-tailwind/react";
-// import Moment from "react-moment";
 import moment from "moment";
 import { IoIosMore } from "react-icons/io";
 import { AiOutlineHeart, AiTwotoneDelete } from "react-icons/ai";
@@ -21,28 +20,32 @@ import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { deletePost, likePost } from "../actions/posts";
 import { useEffect } from "react";
-import { getPosts } from "../actions/posts";
 import AddPlaces from "./AddPlaces";
-import user from "../assets/test.webp"
+import jwt_decode from "jwt-decode";
+import { useLocation, useNavigate } from "react-router-dom";
 
-export default function PostItem({ postItem, index, }) {
-  const [likeStatus, setlikeStatus] = useState(true);
+export default function PostItem({ postItem, index }) {
+  const [likeStatus, setlikeStatus] = useState(false);
   const [openedMenu, setOpenedMenu] = useState(false);
+  const [userProfile, setUserProfile] = useState(null);
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
-  const [userProfile, setUserProfile] = useState();
 
   const dispatch = useDispatch();
+  const location = useLocation();
+
+  // initializw useNavigate
+  const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(getPosts);
     setUserProfile(JSON.parse(localStorage.getItem("profile")))
-  }, [dispatch]);
-
+    likechecking();
+  }, [location]);
 
   const handleOpen = () => setOpen(!open);
 
   // ---------------upadte post
+
   const deletePostItem = async () => {
     try {
       dispatch(deletePost(postItem._id));
@@ -51,21 +54,40 @@ export default function PostItem({ postItem, index, }) {
       console.log(err);
     }
   };
+
   // --------------like post
-  const likepostItem = async () => {
+  const likepostItem = async (like) => {
     try {
-      setlikeStatus((prevState) => !prevState);
       dispatch(likePost(postItem._id));
+      if (
+        !localStorage.getItem("profile") ||
+        jwt_decode(JSON.parse(localStorage.getItem("profile"))?.token)?.exp *
+          1000 <
+          new Date().getTime()
+      ) {
+        navigate("/sign-in");
+      } else {
+        setlikeStatus(like);
+        dispatch(likePost(postItem._id));
+      }
     } catch (err) {
       console.log(err);
     }
   };
+  // checking for like status
+  const likechecking = async () => {
+    const liked = postItem.likes.find(
+      (like) =>
+        like === JSON.parse(localStorage.getItem("profile"))?.result?._id ||
+        JSON.parse(localStorage.getItem("profile"))?.result?.id
+    );
 
-  // checkinf for like status
-  const likechecking = () => {
-    const liked = postItem.likes.find((like) => like === userProfile.result._id || userProfile.result._googleId )
-  } 
-
+    if (liked) {
+      setlikeStatus(null);
+    } else {
+      setlikeStatus(false);
+    }
+  };
   return (
     postItem && (
       <motion.div
@@ -79,8 +101,12 @@ export default function PostItem({ postItem, index, }) {
             className="absolute left-0 cursor-pointer w-full h-full z-30 "
           ></div>
         )}
-        <Card className="w-full relative max-w-[270px] shadow-lg mx-auto">
-          <AddPlaces updatingPost={edit} post={postItem} />
+        <Card className="w-full relative max-w-[230px] shadow-lg mx-auto">
+          <AddPlaces
+            updatingPost={edit}
+            post={postItem}
+            UserProfile={userProfile}
+          />
           <Dialog open={open} size="xs" handler={handleOpen}>
             <DialogHeader>sure you want to delete this post</DialogHeader>
             <DialogFooter>
@@ -99,25 +125,28 @@ export default function PostItem({ postItem, index, }) {
               </Button>
             </DialogFooter>
           </Dialog>
-          <CardHeader className="relative" floated={false} color="blue-gray">
-            <IoIosMore
-              onClick={() => setOpenedMenu((prevStatus) => !prevStatus)}
-              className="absolute z-10 top-3 right-[10px] text-[25px] cursor-pointer font-bold"
-            />
+          <CardHeader
+            className="relative w-[200px]"
+            floated={false}
+            color="blue-gray"
+          >
+            {postItem.creator === userProfile?.result?._id && (
+              <IoIosMore
+                onClick={() => setOpenedMenu((prevStatus) => !prevStatus)}
+                className="absolute z-10 top-3 right-[10px] text-[25px] cursor-pointer font-bold"
+              />
+            )}
             <div className="absolute h-full w-full bg-blue-gray-900 opacity-50 "></div>
             <p className="bg-transparent absolute top-2 left-4">
               {moment(postItem.createdAt).fromNow()}
             </p>
-            <div className="absolute items-center flex gap-1 bottom-5 left-2">
-              <img
-                src={user}
-                alt={postItem.creator}
-                className="w-9 h-9 rounded-full"
-              />
-              <p className="text-[15px]">{postItem.creator}</p>
+            <div className="absolute items-center flex gap-1 bottom-3 left-2">
+              <div className=" flex justify-center   outline-2 outline-offset-[2px] outline-gray-900 text-white bg-[#008066] font-[540] text-[20px] items-center  relative object-cover object-center rounded-full w-7 h-7 p-0.5">
+                {postItem.name.charAt(0)}
+              </div>
+              <p className="text-[14px]">{postItem.name}</p>
             </div>
-            {/* <Moment fromNow>{postItem.createdAt?.toDate()}</Moment> */}
-            <img src={postItem.selectedFile} alt="ui/ux review check" />
+            <img src={postItem.selectedFile} className="w-[200px]" alt="" />
           </CardHeader>
           {openedMenu && (
             <motion.div
@@ -144,36 +173,35 @@ export default function PostItem({ postItem, index, }) {
               </button>
             </motion.div>
           )}
-          <CardBody className="pb-2">
+          <CardBody className="pt-2 pb-2">
             <div className="flex items-center justify-between h-16">
               <p className="font-semibold text-ellipsis line-clamp-3">
                 #{postItem.tags.join(" #")}
               </p>
               <div className="flex items-center gap-1.5 font-normal">
                 <div className="relative w-7 h-7">
-                  {likeStatus ? (
+                  {likeStatus === null ? (
+                    <Lottie
+                      onClick={() => likepostItem(false)}
+                      loop={false}
+                      className="text-[25px] -top-1 left-0 cursor-pointer scale-[6] w-8 absolute"
+                      animationData={staticData}
+                    />
+                  ) : likeStatus === false ? (
                     <AiOutlineHeart
-                      onClick={() => likepostItem()}
+                      onClick={() => likepostItem(true)}
                       className="text-[27px] ml-[2px] cursor-pointer ease-in-out duration-300  text-[#08764e]"
                     />
                   ) : (
-                    //  : postItem.likeCount !== 0 ? (
-                    //   <Lottie
-                    //     onClick={() => unlikepostItem()}
-                    //     loop={false}
-                    //     className="text-[25px] -top-1 left-0 cursor-pointer scale-[6] w-8 absolute"
-                    //     animationData={staticData}
-                    //   />
-                    // )
                     <Lottie
-                      onClick={() => likepostItem()}
+                      onClick={() => likepostItem(false)}
                       loop={false}
                       className="text-[25px] -top-1 left-0 cursor-pointer scale-[6] w-8 absolute"
                       animationData={animationData}
                     />
                   )}
                 </div>
-                {postItem.likeCount}
+                {postItem.likes.length}
               </div>
             </div>
             <div className="h-[40px]">
