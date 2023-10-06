@@ -1,7 +1,7 @@
 import { ThemeProvider } from "@material-tailwind/react";
 import "./App.css";
 import Header from "./component/Header";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { getPosts } from "./actions/posts";
@@ -17,7 +17,7 @@ function App() {
   // -----------useEffect
   useEffect(() => {
     setUserProfile(JSON.parse(localStorage.getItem("profile")));
-  }, []);
+  }, [localStorage.getItem("profile")]);
   return (
     <ThemeProvider>
       <BrowserRouter>

@@ -16,7 +16,7 @@ import Lottie from "lottie-react";
 import animationData from "../assets/svg/likeAnimation.json";
 import staticData from "../assets/svg/likeAnimationStatic.json";
 import { TbEdit } from "react-icons/tb";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { deletePost, likePost } from "../actions/posts";
 import { useEffect } from "react";
@@ -38,7 +38,7 @@ export default function PostItem({ postItem, index }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setUserProfile(JSON.parse(localStorage.getItem("profile")))
+    setUserProfile(JSON.parse(localStorage.getItem("profile")));
     likechecking();
   }, [location]);
 
@@ -50,6 +50,7 @@ export default function PostItem({ postItem, index }) {
     try {
       dispatch(deletePost(postItem._id));
       handleOpen();
+      setOpenedMenu(false)
     } catch (err) {
       console.log(err);
     }
@@ -88,12 +89,18 @@ export default function PostItem({ postItem, index }) {
       setlikeStatus(false);
     }
   };
+  const seeDetails = (id) => {
+    navigate(`/post/Details/${id}`)
+  }
   return (
     postItem && (
+      <AnimatePresence>
       <motion.div
-        transition={{ delay: 0.1 * index >= 1 ? 1 : 0.1 * index }}
+        key={index}
+        transition={{ delay: 0.1 * index >= 1 ? 1 : 0.1 * index}}
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
+        // exit={{opacity: 0, scale: 0}}
       >
         {openedMenu && (
           <div
@@ -104,6 +111,8 @@ export default function PostItem({ postItem, index }) {
         <Card className="w-full relative max-w-[230px] shadow-lg mx-auto">
           <AddPlaces
             updatingPost={edit}
+            setEdit={setEdit}
+            setOpenedMenu={setOpenedMenu}
             post={postItem}
             UserProfile={userProfile}
           />
@@ -132,7 +141,7 @@ export default function PostItem({ postItem, index }) {
           >
             {postItem.creator === userProfile?.result?._id && (
               <IoIosMore
-                onClick={() => setOpenedMenu((prevStatus) => !prevStatus)}
+                onClick={() => setOpenedMenu((prevState) => !prevState) }
                 className="absolute z-10 top-3 right-[10px] text-[25px] cursor-pointer font-bold"
               />
             )}
@@ -211,12 +220,13 @@ export default function PostItem({ postItem, index }) {
             </div>
           </CardBody>
           <CardFooter className="pt-1 pb-3">
-            <Button size="lg" fullWidth={true}>
+            <Button onClick={() => seeDetails(postItem._id)} size="lg" fullWidth={true}>
               see Details
             </Button>
           </CardFooter>
         </Card>
       </motion.div>
+      </AnimatePresence>
     )
   );
 }

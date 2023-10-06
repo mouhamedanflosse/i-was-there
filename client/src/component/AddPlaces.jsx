@@ -14,10 +14,12 @@ import { updatePost } from "../actions/posts";
 import { useDispatch } from "react-redux";
 import { VscAdd } from "react-icons/vsc";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function AddPlaces({ updatingPost, post}) {
+export default function AddPlaces({ updatingPost, post,data,setEdit,setOpenedMenu}) {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   // const user = UserProfile.result
   const [formData, setFormData] = useState({
     title: "",
@@ -36,8 +38,12 @@ export default function AddPlaces({ updatingPost, post}) {
           setFormData({ ...formData, selectedFile: post.selectedFile });
         }
         dispatch(updatePost(formData));
+        setEdit(false)
+        handleOpen()
+        setOpenedMenu(false)
       } else {
-        dispatch(CreatePost(formData));
+        dispatch(CreatePost(formData,navigate));
+        handleOpen()
         setFormData({
         title: "",
         message: "",
@@ -61,7 +67,7 @@ export default function AddPlaces({ updatingPost, post}) {
 
   return (
     <div className="relative">
-      {!updatingPost && formData.name && (
+      {data && formData.name && (
         <div className="fixed mb-7 z-50 top-[80vh] h-20 mx-auto w-20 right-[30px]  rounded-full">
           <Button
             className="hover:shadow-none shadow-sm relative text-[40px] rounded-full flex items-center w-14 h-14  justify-center hover:bg-[#3b3a3a]"
@@ -130,7 +136,6 @@ export default function AddPlaces({ updatingPost, post}) {
               <Button
                 variant="gradient"
                 type="submit"
-                onClick={handleOpen}
                 fullWidth
               >
                 add

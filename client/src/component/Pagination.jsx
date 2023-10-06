@@ -3,7 +3,7 @@ import { Pagination } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { getBySearch, getPosts } from "../actions/posts";
 import { useNavigate } from "react-router-dom";
-export default function PostPagination({ page, data, tags, searchQuery }) {
+export default function PostPagination({data, tags, searchQuery }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleChange = async (data) => {
@@ -17,13 +17,6 @@ export default function PostPagination({ page, data, tags, searchQuery }) {
       navigate(`/posts?page=${data.target.innerText}`);
     }
   };
-  useEffect(() => {
-    if (tags || searchQuery) {
-      dispatch(getBySearch({searchQuery, tags, page}));
-    } else if (page) {
-      dispatch(getPosts(page));
-    }
-  }, [page,searchQuery,tags]);
   return (
     <Pagination
       count={data.numberOfpages}

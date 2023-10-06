@@ -12,12 +12,13 @@ import { useNavigate } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
 import CustomGoogleButton from "../component/GoogleButton";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { actionType } from "../constants/actionType";
 import { signIn } from "../actions/auth"
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
+  const {loading} = useSelector((state) => state.auth)
 
   // submiting state
   const [submiting, setSubmiting] = useState(false);
@@ -46,7 +47,7 @@ export default function SignIn() {
     },
     onSubmit: async (values) => {
       try {
-        await dispatch(signIn(values, navigate));
+        dispatch(signIn(values, navigate));
       } catch (err) {
         console.log(err);
       }
@@ -142,7 +143,7 @@ export default function SignIn() {
             </div>
           </div>
           <Button type="submit" className="mt-6" fullWidth>
-            {submiting ? <Spinner className="w-6" color="white" /> : "sign in"}
+            {loading ? <Spinner className="w-6 mx-auto" color="white" /> : "sign in"}
           </Button>
           <CustomGoogleButton login={loginWithGoogle} />
           <Typography color="gray" className="mt-4 text-center font-normal">

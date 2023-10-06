@@ -13,7 +13,7 @@ import { PiEyeBold, PiEyeClosedBold } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
 import CustomGoogleButton from "../component/GoogleButton";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { actionType } from "../constants/actionType";
 import { signUp } from "../actions/auth"
@@ -21,7 +21,7 @@ import { signUp } from "../actions/auth"
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const [matchedpwd, setMatchedpwd] = useState("");
-
+  const {loading} = useSelector((state) => state.auth)
   // submiting state
   const [submiting, setSubmiting] = useState(false);
 
@@ -74,9 +74,7 @@ export default function SignUp() {
     },
     onSubmit: async (values) => {
       try {
-        setSubmiting(true);
         dispatch(signUp(values, navigate));
-        setSubmiting(false);
       } catch (err) {
         console.log(err);
       }
@@ -239,7 +237,7 @@ export default function SignUp() {
             </div>
           </div>
           <Button type="submit" className="mt-6" fullWidth>
-            {submiting ? <Spinner className="w-6" color="white" /> : "sign up"}
+            {loading ? <Spinner className="w-6 mx-auto" color="white" /> : "sign up"}
           </Button>
           <CustomGoogleButton login={loginWithGoogle} />
           <Typography color="gray" className="mt-4 text-center font-normal">

@@ -6,17 +6,25 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Search from "../component/Search";
 import PostPagination from "../component/Pagination";
-import Loader from "../assets/loader/Loader";
+import { getBySearch, getPosts } from "../actions/posts";
 
 export default function Home() {
   const location = useLocation();
   const dispatch = useDispatch();
   const data = useSelector((state) => state.posts);
-  console.log(data);
   function useQuery() {
     return new URLSearchParams(useLocation().search);
   }
+  const Query = useQuery();
+  const page = Query.get("page");
+  const searchQuery = Query.get("searchQuery");
+  const tags = Query.get("tags");
   useEffect(() => {
+    if (tags || searchQuery) {
+      dispatch(getBySearch({ searchQuery, tags, page }));
+    } else if (page) {
+      dispatch(getPosts(page));
+    }
     if (
       localStorage.getItem("profile") &&
       JSON.parse(localStorage.getItem("profile"))?.exp * 1000 <
@@ -24,27 +32,22 @@ export default function Home() {
     ) {
       dispatch({ type: actionType.logOut });
     }
-  }, [location]);
-  const Query = useQuery();
-  const page = Query.get("page");
-  const searchQuery = Query.get("searchQuery");
-  const tags = Query.get("tags");
+  }, [location, page, searchQuery, tags]);
 
-  return data &&
-    <div className="mt-8 relative">
-      <Search />
-      <div className="flex justify-center relative gap-5 flex-wrap">
-        {data.posts?.map((postItem, index) => (
-          <PostItem key={postItem._id} postItem={postItem} index={index} />
-        ))}
+  return (
+    data && (
+      <div className="mt-8 relative">
+        <Search />
+        <div className="flex justify-center relative gap-5 flex-wrap">
+          {data.posts?.map((postItem, index) => (
+            <PostItem key={postItem._id} postItem={postItem} index={index} />
+          ))}
+        </div>
+        {data.posts && (
+          <PostPagination data={data} searchQuery={searchQuery} tags={tags} />
+        )}
+        <AddPlaces data={true}/>
       </div>
-      <PostPagination
-        data={data}
-        page={page}
-        searchQuery={searchQuery}
-        tags={tags}
-      />
-      <AddPlaces />
-      {/* <Loader /> */}
-    </div>
+    )
+  );
 }
