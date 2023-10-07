@@ -6,7 +6,7 @@ import {
 } from "@material-tailwind/react";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Lottie from "lottie-react";
 import animationData from "../assets/svg/likeAnimation.json";
 import staticData from "../assets/svg/likeAnimationStatic.json";
@@ -15,36 +15,38 @@ import { deletePost, getPostsById, likePost } from "../actions/posts";
 import { AiOutlineComment, AiOutlineHeart } from "react-icons/ai";
 import { FaRegShareSquare } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import Comment from "../component/Comment";
+import Comments from "../component/Comments";
+import MorePosts from "../component/MorePosts";
 export default function Details({ UserProfile }) {
   const [likeStatus, setlikeStatus] = useState(false);
+  const [openComments, setOpenComments] = useState(false);
   const data = useSelector((state) => state.posts);
   const params = useParams();
+
+  const location = useLocation();
 
   // initializw useNavigate
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { post } = useSelector((state) => state.posts);
-  console.log(post)
+//   console.log(post);
 
   useEffect(() => {
     dispatch(getPostsById(params.id));
-      likechecking()
-  }, [post?.name]);
+    likechecking();
+  }, [post?.name, location]);
 
   // checking for like status
   const likechecking = async () => {
     const liked = post?.likes?.find(
       (like) => like === UserProfile?.result?._id || UserProfile?.result?.id
     );
-    console.log(liked)
     if (liked) {
       setlikeStatus(null);
     } else {
       setlikeStatus(false);
     }
   };
-
   // --------------like post
   const likepostItem = async (like) => {
     try {
@@ -64,8 +66,9 @@ export default function Details({ UserProfile }) {
   return (
     post && (
       <div className="mt-5 flex justify-center gap-14 flex-wrap">
+        <Comments open={openComments} setOpen={setOpenComments} />
         <Card className="w-full grow  max-w-[48rem] m-4 flex-row flex-wrap">
-               <CardHeader
+          <CardHeader
             shadow={false}
             floated={false}
             className="Xsmd:m-0 mt-6 shadow-md shadow-black self-stretch w-64 Xsmd:shadow-none mx-auto shrink-0  Xsmd:rounded-r-none rounded-[15px}"
@@ -124,12 +127,26 @@ export default function Details({ UserProfile }) {
                 </div>
                 {post.likes.length}
               </div>
-              <AiOutlineComment className="text-[28px] cursor-pointer " />
+              <AiOutlineComment onClick={() => setOpenComments(true)} className="text-[28px] cursor-pointer " />
               <FaRegShareSquare className="text-[25px] ml-1 cursor-pointer " />
             </div>
           </CardBody>
         </Card>
-        <div></div>
+        <div className="bg-white grow w-[250px] h-96 overflow-y-auto">
+          <Typography
+            variant="h6"
+            color="gray"
+            className="mb-4 text-center mt-2 uppercase"
+          >
+            you might also like :
+          </Typography>
+          <div className="flex justify-center overflow-hidden flex-wrap gap-4 ">
+            <MorePosts post={post} />
+            <MorePosts post={post} />
+            <MorePosts post={post} />
+            <MorePosts post={post} />
+          </div>
+        </div>
       </div>
     )
   );
