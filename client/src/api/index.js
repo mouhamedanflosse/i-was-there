@@ -11,13 +11,15 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
+// -------------------post section
+
 // fetch all posts
 export const fetchPosts = (page) => API.get(`/posts?page=${page}`);
 
-// fetch all posts
+// fetch Post By Id  
 export const fetchPostsById = (id) => API.get(`/posts/${id}`);
 
-// fetch all post
+// fetch  post by search
 export const fetchPostsBySearch = (Query) => API.get(`/posts/search?searchQuery=${Query.searchQuery || "none"}&tags=${Query.tags}&page=${Query.page || 1}`);
 
 //  add new post
@@ -33,8 +35,16 @@ export const updatePost = (updatedPost) =>
 //  like post
 export const likePost = (id) => API.patch(`posts/likePost/${id}`);
 
+// -------------------authentication system 
+
 //  user sign in
 export const signIn = (formData) => API.post(`users/signIn`, formData);
 
 //  user sign up
 export const signUp = (formData) => API.post(`users/signUp`, formData);
+
+
+// -------------------commments section
+
+// fetch all posts
+export const addComment = (value) => API.post(`/posts/${value.id}/postComments`,value.comment);

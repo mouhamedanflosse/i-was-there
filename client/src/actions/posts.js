@@ -5,8 +5,18 @@ import { actionType } from "../constants/actionType";
 export const getPosts = (page) => async (dispatch) => {
   try {
     const { data } = await api.fetchPosts(page);
-    console.log(data);
     await dispatch({ type: actionType.fetch_all, payload: data });
+  } catch (err) {
+    console.log(err);
+  }
+};
+// create Comment
+export const createComment = (value) => async (dispatch) => {
+  try {
+    const { data } = await api.addComment(value);
+    console.log(data);
+    
+    // await dispatch({ type: actionType.fetch_all, payload: data });
   } catch (err) {
     console.log(err);
   }
@@ -16,6 +26,7 @@ export const getPostsById = (id) => async (dispatch) => {
   try {
     const { data } = await api.fetchPostsById(id);
     dispatch({ type: actionType.fetch_post, payload: data });
+    console.log("dispatching done")
   } catch (err) {
     console.log(err);
   }

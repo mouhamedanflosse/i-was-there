@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import psotsMessage from "../model/postsSchema.js";
+import postsMessage from "../model/postsSchema.js";
 import createHttpError from "http-errors";
 const postsContoroller = {
   getPosts: async (req, res, next) => {
@@ -7,8 +7,8 @@ const postsContoroller = {
     const limit = 8
     try {
       const satrtingTndex = (Number(page) - 1) * limit
-      const posts = await psotsMessage.find({}, { __v: 0 }).sort({_id : -1}).limit(limit).skip(satrtingTndex)
-      const total = await psotsMessage.countDocuments({})
+      const posts = await postsMessage.find({}, { __v: 0 }).sort({_id : -1}).limit(limit).skip(satrtingTndex)
+      const total = await postsMessage.countDocuments({})
 
       res.send({posts,currentPage : Number(page) , numberOfpages : Math.ceil(total/limit)});
     } catch (err) {
@@ -18,7 +18,7 @@ const postsContoroller = {
   getPostsById: async (req, res, next) => {
     const id = req.params.id;
     try {
-      const posts = await psotsMessage.findById(id, { __v: 0 });
+      const posts = await postsMessage.findById(id, { __v: 0 });
       if (!posts) {
         throw createHttpError(404, "this post not exist");
       }
@@ -36,10 +36,10 @@ const postsContoroller = {
     try {
       const limit = 8
       const satrtingTndex = (Number(page) - 1) * limit
-      const posts = await psotsMessage.find({
+      const posts = await postsMessage.find({
         $or: [{ title }, { tags: { $in: tags.split(",") } }],
       }).sort({_id : -1}).limit(limit).skip(satrtingTndex)
-      const total = await psotsMessage.countDocuments({
+      const total = await postsMessage.countDocuments({
         $or: [{ title }, { tags: { $in: tags.split(",") } }],
       })
       if (!posts) {
@@ -56,7 +56,7 @@ const postsContoroller = {
       if (!req.userId) {
         return res.send({ message: "please sign in" });
       }
-      const newPost = new psotsMessage({
+      const newPost = new postsMessage({
         ...post,
         creator: req.userId,
         createdAt: new Date().toISOString(),
@@ -74,7 +74,7 @@ const postsContoroller = {
   DeletePost: async (req, res, next) => {
     const id = req.params.id;
     try {
-      const post = await psotsMessage.findByIdAndDelete(id);
+      const post = await postsMessage.findByIdAndDelete(id);
       if (!post) {
         throw createHttpError(404, "post does not exist");
       }
@@ -91,7 +91,7 @@ const postsContoroller = {
   updatePost: async (req, res, next) => {
     const id = req.params.id;
     try {
-      const post = await psotsMessage.findByIdAndUpdate(id, req.body, {
+      const post = await postsMessage.findByIdAndUpdate(id, req.body, {
         new: true,
       });
       if (!post) {
@@ -107,13 +107,32 @@ const postsContoroller = {
       next(createHttpError(err));
     }
   },
+  CommentPost: async (req, res, next) => {
+    const id = req.params.id;
+    const comment = req.body
+    console.log(id)
+    try {
+      const post = await postsMessage.findById(id, { __v: 0 });
+      if (!post) {
+        throw createHttpError(404, "post does not exist");
+      }
+      post.comments.push({...comment,createdAt : new Date().toISOString()})
+      const updatedPost = await postsMessage.findByIdAndUpdate(id, post, {
+        new: true,
+      });
+      res.send(updatedPost)
+    } catch (err) {
+      console.log(err.message);
+      next(createHttpError(err));
+    }
+  },
   likePost: async (req, res, next) => {
     const id = req.params.id;
     try {
       if (!req.userId) {
         throw createHttpError(401, "please log in");
       }
-      const post = await psotsMessage.findById(id);
+      const post = await postsMessage.findById(id);
       if (!post) {
         throw createHttpError(404, "post does not exist");
       }
@@ -123,7 +142,7 @@ const postsContoroller = {
       } else {
         post.likes = post.likes.filter((id) => id !== String(req.userId));
       }
-      const likedPost = await psotsMessage.findByIdAndUpdate(id, post, {
+      const likedPost = await postsMessage.findByIdAndUpdate(id, post, {
         new: true,
       });
       res.send(likedPost);

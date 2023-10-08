@@ -15,8 +15,12 @@ const postsSchema = mongoose.Schema({
     createdAt : {
         type : Date,
         default :  new Date(),
+    },
+    comments : {
+        type :[Object],
+        default : []
     }
 })
 
-const psotsMessage = mongoose.model("psotsMessage", postsSchema)
-export default psotsMessage
+const postsMessage = mongoose.model("psotsMessage", postsSchema)
+export default postsMessage

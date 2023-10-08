@@ -14,7 +14,7 @@ export default function HorizontalCard({ post }) {
     navigate(`/post/Details/${id}`);
   };
   return (
-    <Card className="w-full  max-w-[250px] grow flex-row">
+    <Card className="w-full mx-2 max-w-[250px] grow flex-row">
       <CardHeader
         shadow={false}
         floated={false}

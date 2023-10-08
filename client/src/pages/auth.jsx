@@ -56,6 +56,7 @@ export default function SignIn() {
   // authenticate with google
   const loginWithGoogle = useGoogleLogin({
     onSuccess: async (response) => {
+      console.log(response)
       const profile = await fetchUserData(response.access_token);
       navigate("/");
     },

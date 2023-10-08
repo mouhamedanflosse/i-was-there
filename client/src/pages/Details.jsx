@@ -29,18 +29,26 @@ export default function Details({ UserProfile }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { post } = useSelector((state) => state.posts);
-//   console.log(post);
+  //   console.log(post);
 
   useEffect(() => {
-    dispatch(getPostsById(params.id));
-    likechecking();
+    const loadingPostDet = async () => {
+      await dispatch(getPostsById(params.id));
+      if (post) {
+        likechecking();
+      }
+    };
+    loadingPostDet();
   }, [post?.name, location]);
-
   // checking for like status
   const likechecking = async () => {
-    const liked = post?.likes?.find(
+    console.log("checking for like");
+    console.log(post.likes);
+
+    const liked = post.likes.find(
       (like) => like === UserProfile?.result?._id || UserProfile?.result?.id
     );
+    console.log(liked);
     if (liked) {
       setlikeStatus(null);
     } else {
@@ -51,8 +59,10 @@ export default function Details({ UserProfile }) {
   const likepostItem = async (like) => {
     try {
       if (
-        !UserProfile ||
-        jwt_decode(UserProfile?.token)?.exp * 1000 < new Date().getTime()
+        !localStorage.getItem("profile") ||
+        jwt_decode(JSON.parse(localStorage.getItem("profile"))?.token)?.exp *
+          1000 <
+          new Date().getTime()
       ) {
         navigate("/sign-in");
       } else {
@@ -65,8 +75,8 @@ export default function Details({ UserProfile }) {
   };
   return (
     post && (
-      <div className="mt-5 flex justify-center gap-14 flex-wrap">
-        <Comments open={openComments} setOpen={setOpenComments} />
+      <div className="mt-5 flex justify-center items-center gap-[26px] flex-wrap">
+        <Comments open={openComments} setOpen={setOpenComments} post={post} />
         <Card className="w-full grow  max-w-[48rem] m-4 flex-row flex-wrap">
           <CardHeader
             shadow={false}
@@ -127,7 +137,10 @@ export default function Details({ UserProfile }) {
                 </div>
                 {post.likes.length}
               </div>
-              <AiOutlineComment onClick={() => setOpenComments(true)} className="text-[28px] cursor-pointer " />
+              <AiOutlineComment
+                onClick={() => setOpenComments(true)}
+                className="text-[28px] cursor-pointer z-10"
+              />
               <FaRegShareSquare className="text-[25px] ml-1 cursor-pointer " />
             </div>
           </CardBody>
