@@ -46,5 +46,11 @@ export const signUp = (formData) => API.post(`users/signUp`, formData);
 
 // -------------------commments section
 
-// fetch all posts
-export const addComment = (value) => API.post(`/posts/${value.id}/postComments`,value.comment);
+// add comments
+export const addComment = (value) => API.post(`/posts/${value.id}/postComment`,value.comment);
+
+// delete comment 
+export const deletePostComment = (id,postId) => API.post(`/posts/${id}/deleteComment`, {postId});
+
+// update comment 
+export const updatePostComment = (id,post) => API.post(`/posts/${id}/updateComment`, post);

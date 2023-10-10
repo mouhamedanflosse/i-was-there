@@ -42,15 +42,12 @@ export default function Details({ UserProfile }) {
   }, [post?.name, location]);
   // checking for like status
   const likechecking = async () => {
-    console.log("checking for like");
-    console.log(post.likes);
 
     const liked = post.likes.find(
       (like) => like === UserProfile?.result?._id || UserProfile?.result?.id
     );
     console.log(liked);
     if (liked) {
-      setlikeStatus(null);
     } else {
       setlikeStatus(false);
     }

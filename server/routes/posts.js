@@ -19,6 +19,10 @@ route.patch("/likePost/:id", auth, postsContoroller.likePost);
 
 route.get("/:id", postsContoroller.getPostsById);
 
-route.post("/:id/postComments", postsContoroller.CommentPost);
+route.post("/:id/postComment", postsContoroller.CommentPost);
+
+route.post("/:id/deleteComment", postsContoroller.deleteComment);
+
+route.post("/:id/updateComment", postsContoroller.UpdateComment);
 
 export default route;

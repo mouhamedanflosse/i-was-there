@@ -14,9 +14,25 @@ export const getPosts = (page) => async (dispatch) => {
 export const createComment = (value) => async (dispatch) => {
   try {
     const { data } = await api.addComment(value);
-    console.log(data);
-    
-    // await dispatch({ type: actionType.fetch_all, payload: data });
+    await dispatch({ type: actionType.fetch_post, payload: data });
+  } catch (err) {
+    console.log(err);
+  }
+};
+// update Comment
+export const updateComment = (id,post) => async (dispatch) => {
+  try {
+    const { data } = await api.updatePostComment(id,post);
+    await dispatch({ type: actionType.fetch_post, payload: data });
+  } catch (err) {
+    console.log(err);
+  }
+};
+// delete Comment
+export const DeleteComment = (id,postId) => async (dispatch) => {
+  try {
+    const { data } = await api.deletePostComment(id,postId);
+    await dispatch({ type: actionType.fetch_post, payload: data });
   } catch (err) {
     console.log(err);
   }
@@ -26,7 +42,6 @@ export const getPostsById = (id) => async (dispatch) => {
   try {
     const { data } = await api.fetchPostsById(id);
     dispatch({ type: actionType.fetch_post, payload: data });
-    console.log("dispatching done")
   } catch (err) {
     console.log(err);
   }
@@ -75,7 +90,7 @@ export const likePost = (id, like_type) => async (dispatch) => {
   try {
     const { data } = await api.likePost(id);
     if (like_type === "single") {
-      dispatch({ type: actionType.like_post, payload: data });
+      dispatch({ type: actionType.fetch_post, payload: data });
     } else {
       dispatch({ type: actionType.update, payload: data });
     }

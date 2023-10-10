@@ -110,7 +110,6 @@ const postsContoroller = {
   CommentPost: async (req, res, next) => {
     const id = req.params.id;
     const comment = req.body
-    console.log(id)
     try {
       const post = await postsMessage.findById(id, { __v: 0 });
       if (!post) {
@@ -118,6 +117,45 @@ const postsContoroller = {
       }
       post.comments.push({...comment,createdAt : new Date().toISOString()})
       const updatedPost = await postsMessage.findByIdAndUpdate(id, post, {
+        new: true,
+      });
+      res.send(updatedPost)
+    } catch (err) {
+      console.log(err.message);
+      next(createHttpError(err));
+    }
+  },
+  UpdateComment: async (req, res, next) => {
+    const id = req.params.id;
+    const {commentText,postId} = req.body
+    try {
+      const post = await postsMessage.findById(postId, { __v: 0 });
+      if (!post) {
+        throw createHttpError(404, "post does not exist");
+      }
+      post.comments.map((comment) => String(comment._id) === id ? comment.commentText = commentText : comment)
+      const updatedPost = await postsMessage.findByIdAndUpdate(postId, post, {
+        new: true,
+      });
+      res.send(updatedPost)
+    } catch (err) {
+      console.log(err.message);
+      next(createHttpError(err));
+    }
+  },
+  deleteComment: async (req, res, next) => {
+    const id = req.params.id;
+    const {postId} = req.body
+    try {
+      const post = await postsMessage.findById(postId, { __v: 0 });
+      // console.log(post)
+
+      if (!post) {
+        throw createHttpError(404, "post does not exist");
+      }
+      post.comments = await post.comments.filter((comment) => id  !== String(comment._id))
+      // console.log(String(post.comments[5]._id))
+      const updatedPost = await postsMessage.findByIdAndUpdate(postId, post, {
         new: true,
       });
       res.send(updatedPost)

@@ -7,6 +7,7 @@ export const actionType = {
     create : "create",
     delete : "delete",
     AUTH : "auth",
+    Createcomment : "comment",
     logOut : "logOut",
     start_loading : "start_loading",
     end_loading : "end_loading"

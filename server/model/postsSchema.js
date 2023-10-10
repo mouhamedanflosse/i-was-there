@@ -1,5 +1,15 @@
 import mongoose from "mongoose";
 
+const commentSchema = new mongoose.Schema({
+    commentText: String,
+    creator: String,
+    name : String,
+    picutre : String,
+    createdAt: {
+        type: Date,
+        default: new Date(),
+    },
+});
 
 const postsSchema = mongoose.Schema({
     title : String,
@@ -17,7 +27,7 @@ const postsSchema = mongoose.Schema({
         default :  new Date(),
     },
     comments : {
-        type :[Object],
+        type : [commentSchema],
         default : []
     }
 })

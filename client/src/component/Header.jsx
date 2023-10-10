@@ -26,7 +26,6 @@ export default function Header() {
       }
     }
   }, [location]);
-  console.log(buttonPath)
   return (
     <div className="flex bg-white mt-2  justify-between px-4 py-1 rounded-md items-center">
       <img

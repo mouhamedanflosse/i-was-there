@@ -28,8 +28,8 @@ function App() {
             <Route path="/posts" element={<Home />} />
             <Route path="/posts/search" element={<Home />} />
             <Route path="/post/Details/:id" element={<Details UserProfile={UserProfile}/>} />
-            <Route path="/sign-in" element={!localStorage.getItem("profile") ? <SignIn /> : <Navigate to="/posts" replace/>} />
-            <Route path="/sign-up" element={!localStorage.getItem("profile") ? <SignUp /> : <Navigate to="/posts" replace/>} />
+            <Route path="/sign-in" element={!UserProfile ? <SignIn /> : <Navigate to="/posts" replace/>} />
+            <Route path="/sign-up" element={!UserProfile ? <SignUp /> : <Navigate to="/posts" replace/>} />
           </Routes>
         </div>
       </BrowserRouter>

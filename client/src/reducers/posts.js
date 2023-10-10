@@ -16,8 +16,6 @@ const posts = (state = {}, action) => {
       return { ...state, ...action.payload };
     case "fetch_post":
       return { ...state, post : action.payload };
-    case "like_post":
-      return { ...state, post : action.payload };
     case "search":
       return { ...state, ...action.payload };
     case "create":
