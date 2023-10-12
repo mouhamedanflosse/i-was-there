@@ -26,9 +26,15 @@ export default function SignOut({UserProfile,location}) {
   // ------------------logOut
   const dispatch = useDispatch();
   const logOUt =  async () => {
-    handleOpen();
+    try {
     await dispatch({ type: actionType.logOut });
-    navigate("/");
+    handleOpen();
+    setTimeout(() => {
+      navigate("/");
+    }, 500);
+  } catch(err) {
+    console.log(err)
+  }
   };
   // ----------useEffect
   useEffect(() => {

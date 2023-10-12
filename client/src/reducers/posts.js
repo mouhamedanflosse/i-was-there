@@ -1,5 +1,9 @@
-const posts = (state = {}, action) => {
+const posts = (state = {loading : false}, action) => {
   switch (action.type) {
+    case "start_loading":
+      return {...state, loading : true};
+    case "end_loading":
+      return {...state, loading : false};
     case "update":
       return {
         ...state,
@@ -16,6 +20,8 @@ const posts = (state = {}, action) => {
       return { ...state, ...action.payload };
     case "fetch_post":
       return { ...state, post : action.payload };
+    case "similar_posts":
+      return { ...state, similar_posts : action.payload };
     case "search":
       return { ...state, ...action.payload };
     case "create":

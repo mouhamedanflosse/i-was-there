@@ -30,20 +30,22 @@ export default function AddPlaces({ updatingPost, post,data,setEdit,setOpenedMen
   });
   const handleOpen = () => setOpen((cur) => !cur);
 
-  const addPost = (e) => {
+  const addPost = async (e) =>  {
     e.preventDefault();
     try {
       if (updatingPost) {
         if (!formData.selectedFile) {
           setFormData({ ...formData, selectedFile: post.selectedFile });
         }
-        dispatch(updatePost(formData));
+        await dispatch(updatePost(formData));
         setEdit(false)
         handleOpen()
         setOpenedMenu(false)
       } else {
-        dispatch(CreatePost(formData,navigate));
         handleOpen()
+        await setTimeout(() => {
+         dispatch(CreatePost(formData,navigate));
+        }, 500);
         setFormData({
         title: "",
         message: "",

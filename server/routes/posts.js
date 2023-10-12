@@ -25,4 +25,6 @@ route.post("/:id/deleteComment", postsContoroller.deleteComment);
 
 route.post("/:id/updateComment", postsContoroller.UpdateComment);
 
+route.post("/similarPosts", postsContoroller.getSimilarPosts);
+
 export default route;

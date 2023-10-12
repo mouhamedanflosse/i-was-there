@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 const usersController = {
   signIn: async (req, res, next) => {
     const { email, password } = req.body;
-    
+
     try {
       const result = await users.findOne({ email });
 
@@ -58,7 +58,7 @@ const usersController = {
 const generateAuthToken = (user) => {
   const token = jwt.sign(
     { email: user.email, id: user._id },
-    process.env.JWT_SECRET, // Use a secure, environment-specific secret key
+    process.env.JWT_SECRET,
     { expiresIn: "1h" }
   );
   return token;

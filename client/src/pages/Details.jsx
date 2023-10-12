@@ -19,6 +19,9 @@ import Comments from "../component/Comments";
 import MorePosts from "../component/MorePosts";
 export default function Details({ UserProfile }) {
   const [likeStatus, setlikeStatus] = useState(false);
+  //   const [UserProfile, setUserProfile] = useState(
+  //     JSON.parse(localStorage.getItem("profile"))
+  //   );
   const [openComments, setOpenComments] = useState(false);
   const data = useSelector((state) => state.posts);
   const params = useParams();
@@ -30,24 +33,26 @@ export default function Details({ UserProfile }) {
   const dispatch = useDispatch();
   const { post } = useSelector((state) => state.posts);
   //   console.log(post);
-
   useEffect(() => {
+    // setUserProfile(JSON.parse(localStorage.getItem("profile")));
     const loadingPostDet = async () => {
       await dispatch(getPostsById(params.id));
       if (post) {
+        console.log("success 1");
+        console.log(post);
         likechecking();
       }
     };
     loadingPostDet();
-  }, [post?.name, location]);
+  }, [location]);
   // checking for like status
   const likechecking = async () => {
-
-    const liked = post.likes.find(
+    const liked = await post.likes.find(
       (like) => like === UserProfile?.result?._id || UserProfile?.result?.id
     );
     console.log(liked);
     if (liked) {
+      setlikeStatus(null);
     } else {
       setlikeStatus(false);
     }
@@ -150,12 +155,11 @@ export default function Details({ UserProfile }) {
           >
             you might also like :
           </Typography>
-          <div className="flex justify-center overflow-hidden flex-wrap gap-4 ">
-            <MorePosts post={post} />
-            <MorePosts post={post} />
-            <MorePosts post={post} />
-            <MorePosts post={post} />
-          </div>
+          {post && (
+            <div className="flex justify-center relative overflow-hidden flex-wrap gap-4 ">
+              <MorePosts post={post} />
+            </div>
+          )}
         </div>
       </div>
     )

@@ -14,11 +14,13 @@ import Comment from "./Comment";
 import { createComment } from "../actions/posts";
 import { useDispatch } from "react-redux";
 import { updateComment } from "../actions/posts"; 
+import { useRef } from "react";
 
 export default function Comments({ open, setOpen, post }) {
   const [comment, setComment] = useState("");
   const [user, setUser] = useState();
   const [upadating, setUpdating] = useState();
+  const commentRef = useRef()
   const handleOpen = () => setOpen(!open);
   const dispatch = useDispatch();
 
@@ -39,6 +41,7 @@ export default function Comments({ open, setOpen, post }) {
           id: post._id,
         })
       );
+      commentRef.current.scrollIntoView({behavior :"smooth"})
     }
     setComment("");
     setUpdating(null)
@@ -51,6 +54,7 @@ export default function Comments({ open, setOpen, post }) {
   useEffect(() => {
     setUser(JSON.parse(localStorage.getItem("profile"))?.result);
   }, [localStorage.getItem("profile")]);
+
   return (
     <>
       <Dialog
@@ -98,6 +102,7 @@ export default function Comments({ open, setOpen, post }) {
                 />
               ))}
             </div>
+            <div ref={commentRef}></div>
           </div>
         </DialogBody>
         <DialogFooter className="justify-center gap-2 py-0 pb-2 border-t border-blue-gray-50">

@@ -54,3 +54,6 @@ export const deletePostComment = (id,postId) => API.post(`/posts/${id}/deleteCom
 
 // update comment 
 export const updatePostComment = (id,post) => API.post(`/posts/${id}/updateComment`, post);
+
+// -------------------simailar post section
+export const getSimilarPosts = (post) => API.post(`/posts/similarPosts`, post);

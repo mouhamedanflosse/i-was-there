@@ -10,6 +10,7 @@ import Home from "./pages/Home"
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/auth"
 import Details from "./pages/Details";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const [UserProfile, setUserProfile] = useState(null);
@@ -33,6 +34,19 @@ function App() {
           </Routes>
         </div>
       </BrowserRouter>
+      <ToastContainer
+            toastClassName="w-[200px] h-[20px] mx-auto -translate-y-[20px] Xsm:translate-y-0 sm:w-[220px] text-[14px]"
+            position="bottom-center"
+            autoClose={2000}
+            hideProgressBar
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+          />
     </ThemeProvider>
   );
 }

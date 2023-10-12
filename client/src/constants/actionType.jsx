@@ -10,5 +10,6 @@ export const actionType = {
     Createcomment : "comment",
     logOut : "logOut",
     start_loading : "start_loading",
+    similar_posts : "similar_posts",
     end_loading : "end_loading"
 }
