@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 const withMT = require("@material-tailwind/react/utils/withMT");
 module.exports = withMT({
+  darkMode: 'class',
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
@@ -20,6 +21,7 @@ module.exports = withMT({
       gridTemplateColumns: {
         "auto-fill": "repeat(auto-fit, minmax(300px, 1fr))",
       },
+      backgroundColor: ['hover', 'dark', 'dark:hover'],
     },
   },
   plugins: [],

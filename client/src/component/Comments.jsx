@@ -99,6 +99,7 @@ export default function Comments({ open, setOpen, post }) {
                   setUpdating={setUpdating}
                   setComment={setComment}
                   comment={comment}
+                  user={user}
                 />
               ))}
             </div>

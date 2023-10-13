@@ -17,6 +17,7 @@ import { FaRegShareSquare } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import Comments from "../component/Comments";
 import MorePosts from "../component/MorePosts";
+import LoadingforCards from "../assets/loader/LoadingforCards";
 export default function Details({ UserProfile }) {
   const [likeStatus, setlikeStatus] = useState(false);
   //   const [UserProfile, setUserProfile] = useState(
@@ -161,6 +162,7 @@ export default function Details({ UserProfile }) {
             </div>
           )}
         </div>
+          {/* <LoadingforCards /> */}
       </div>
     )
   );

@@ -6,10 +6,15 @@ import { TbEdit } from "react-icons/tb";
 import { useDispatch } from "react-redux";
 import { DeleteComment } from "../actions/posts";
 
-export default function Comment({ comment,post,setComment,setUpdating }) {
-  // const [delete,setDelete] = useState()
+export default function Comment({
+  comment,
+  post,
+  setComment,
+  setUpdating,
+  user,
+}) {
   const [openDelete, setopenDelete] = useState(false);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   //   formating date
   function formatRelativeTime(relativeTime) {
@@ -32,12 +37,12 @@ export default function Comment({ comment,post,setComment,setUpdating }) {
     }
   }
   const deletePostComment = (id) => {
-    dispatch(DeleteComment(id,post._id))
-  }
+    dispatch(DeleteComment(id, post._id));
+  };
   const upadete = () => {
-    setComment(comment.commentText)
-    setUpdating(comment._id)
-  }
+    setComment(comment.commentText);
+    setUpdating(comment._id);
+  };
   return (
     <div className="h-fit relative">
       <div className="m-0 flex items-center justify-start gap-4 pt-0">
@@ -54,10 +59,18 @@ export default function Comment({ comment,post,setComment,setUpdating }) {
         <p className="text-blue-800 font-semibold  text-[11px] ">
           {formatRelativeTime(comment.createdAt)}
         </p>
-        <div className="flex justify-center gap-2 items-center">
-          <BiSolidTrashAlt onClick={() => setopenDelete(true) } className="cursor-pointer" />
-          <TbEdit onClick={() => upadete()} className="cursor-pointer text-[16px]" />
-        </div>
+        {user?._id === comment.creator && (
+          <div className="flex justify-center gap-2 items-center">
+            <BiSolidTrashAlt
+              onClick={() => setopenDelete(true)}
+              className="cursor-pointer"
+            />
+            <TbEdit
+              onClick={() => upadete()}
+              className="cursor-pointer text-[16px]"
+            />
+          </div>
+        )}
       </div>
       <CardBody className="mb-1 p-0">
         <p className="text-[14px] ml-12 ">{comment.commentText}</p>

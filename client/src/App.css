@@ -1,5 +1,5 @@
 html {
-    background-color: #008066;
+    background-color: #1b1942;
     background-color: #eee;
     margin: 0;
     padding: 0;
@@ -93,6 +93,40 @@ div:has(.input) {
  
     40% {
        transform: rotate(calc(var(--angle) * 1deg)) translate(0, calc(var(--radius) * 1px)) scale(1);
+    }
+ }
+
+ .spinner {
+    width: 72px;
+    height: 72px;
+    animation: spinner-3419ln 1.6s infinite ease;
+    border-radius: 50%;
+    background-color: #5d267f;
+ }
+ 
+ @keyframes spinner-3419ln {
+    10% {
+       transform: skewX(60deg);
+    }
+ 
+    20% {
+       transform: skewX(-60deg);
+    }
+ 
+    30% {
+       transform: skewX(0deg);
+    }
+ 
+    40% {
+       transform: skewY(60deg);
+    }
+ 
+    50% {
+       transform: skewY(-60deg);
+    }
+ 
+    60% {
+       transform: skewY(0);
     }
  }
 
