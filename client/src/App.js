@@ -20,18 +20,39 @@ import { ToastContainer } from "react-toastify";
 
 function App() {
   const [UserProfile, setUserProfile] = useState(null);
+  const [darkMode, setDarkMode] = useState(localStorage.getItem("dark"));
 
   // -----------useEffect
   useEffect(() => {
     setUserProfile(JSON.parse(localStorage.getItem("profile")));
   }, [localStorage.getItem("profile")]);
+
+  const user = localStorage.getItem("dark");
+  useEffect(() => {
+    if (user === "true") {
+      setDarkMode(true);
+      window.document.documentElement.classList.add("dark")
+    } else {
+      setDarkMode(false);
+      window.document.documentElement.classList.remove("dark")
+    }
+  }, []);
+  const darkOrLight =  async (dark) => {
+    setDarkMode(dark);
+    localStorage.setItem("dark", `${dark}`);
+    if (dark) {
+      window.document.documentElement.classList.add("dark")
+    } else {
+      window.document.documentElement.classList.remove("dark")
+    }
+  };
   return (
     <ThemeProvider>
       <BrowserRouter>
-        <div className="dark">
-          <div className="dark:bg-[#1b1942] w-full h-full pb-1">
+        <div className="">
+          <div className=" w-full h-full pb-1">
             <div className="max-w-6xl w-full mx-auto">
-              <Header />
+              <Header darkOrLight={darkOrLight} darkMode={darkMode}/>
               <Routes>
                 <Route
                   path="/"

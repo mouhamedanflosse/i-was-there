@@ -8,11 +8,11 @@ import { Avatar } from "@material-tailwind/react";
 import { BiLogIn } from "react-icons/bi";
 import { BsFillMoonStarsFill, BsFillSunFill } from "react-icons/bs";
 
-export default function Header() {
+export default function Header({darkOrLight,darkMode}) {
   const navigate = useNavigate();
   const [UserProfile, setUserProfile] = useState();
   const [buttonPath, setButtonPath] = useState();
-  const [darkMode, setDarkMode] = useState(false);
+  // const [darkMode, setDarkMode] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -28,21 +28,19 @@ export default function Header() {
     }
   }, [location]);
 
-  useEffect(() => {
-    const user = localStorage.getItem("dark");
-    if (user === "true") {
-      darkOrLight(true);
-    } else {
-      darkOrLight(false);
-    }
-  }, []);
-  const darkOrLight = (dark) => {
-    setDarkMode(dark);
-    localStorage.setItem("dark", `${dark}`);
-  };
+  // useEffect(() => {
+  //   const user = localStorage.getItem("dark");
+  //   if (user === "true") {
+  //     darkOrLight(true);
+  //   } else {
+  //     darkOrLight(false);
+  //   }
+  // }, []);
+
+
   return (
     <div className={darkMode ? "dark" : ""}>
-      <div className="flex bg-white dark dark:bg-[#1b1942] duration-300 dark:shadow-sm dark:shadow-blue-gray-700 justify-between px-4 py-1 rounded-md items-center">
+      <div className="flex bg-white dark:bg-[#291d4d] duration-300 dark:shadow-sm dark:shadow-blue-gray-700 justify-between px-4 py-1 rounded-md items-center">
         <img
           onClick={() => navigate("/")}
           src={logo}
@@ -82,7 +80,7 @@ export default function Header() {
           ) : (
             <button
               onClick={() => navigate(buttonPath?.path)}
-              className="flex mt-1 select-none mx-auto items-center bg-purple-900 border border-gray-300 rounded-lg shadow-md px-3 py-2 text-sm font-medium text-white hover:bg-[#43034a]"
+              className="flex mt-1 select-none mx-auto items-center bg-purple-900 border border-gray-300 dark:border-gray-900 rounded-lg shadow-md px-3 py-2 text-sm font-medium text-white hover:bg-[#43034a]"
             >
               <BiLogIn className="text-[20px] mr-1 my-0" />
               <span>{buttonPath?.name}</span>

@@ -107,10 +107,10 @@ export default function PostItem({ postItem, index }) {
           {openedMenu && (
             <div
               onClick={() => setOpenedMenu((prevState) => !prevState)}
-              className="absolute left-0 cursor-pointer w-full h-full z-30 "
+              className="absolute left-0 cursor-pointer w-full h-full z-30"
             ></div>
           )}
-          <Card className="w-full relative max-w-[230px] shadow-lg mx-auto">
+          <Card className="w-full relative max-w-[230px] shadow-lg mx-auto dark:bg-[#1a1231]">
             <AddPlaces
               updatingPost={edit}
               setEdit={setEdit}
@@ -186,11 +186,13 @@ export default function PostItem({ postItem, index }) {
             )}
             <CardBody className="pt-2 pb-2">
               <div className="flex items-center justify-between h-16">
-                <p className="font-semibold text-ellipsis line-clamp-3">
+                <div className="max-h-12 max-w-[140px]">
+                <p className="font-semibold text-ellipsis line-clamp-2 dark:text-[#eee]">
                   #{postItem.tags.join(" #")}
                 </p>
+                </div>
                 <div className="flex items-center gap-1.5 font-normal">
-                  <div className="relative w-7 h-7">
+                  <div className="relative w-7 h-7 ">
                     {likeStatus === null ? (
                       <Lottie
                         onClick={() => likepostItem(false)}
@@ -212,11 +214,12 @@ export default function PostItem({ postItem, index }) {
                       />
                     )}
                   </div>
-                  {postItem.likes.length}
+                  <span className="dark:text-[#08764e] font-semibold">
+                  {postItem.likes.length}</span>
                 </div>
               </div>
               <div className="h-[40px]">
-                <p className="text-ellipsis line-clamp-2" color="gray ">
+                <p className="text-ellipsis line-clamp-2 dark:text-[#c0bdbd]" color="gray ">
                   {postItem.message}
                 </p>
               </div>
@@ -226,6 +229,7 @@ export default function PostItem({ postItem, index }) {
                 onClick={() => seeDetails(postItem._id)}
                 size="lg"
                 fullWidth={true}
+                className="dark:border dark:border-[#eeeeee5f]"
               >
                 see Details
               </Button>

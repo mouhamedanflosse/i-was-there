@@ -44,7 +44,7 @@ export default function Search() {
     >
       <div className="relative w-fit">
         <input
-          className="ml-7 bg-transparent w-[230px] duration-300 border-gray-600  focus:border-black focus:w-[300px] border-2 outline-none h-10 pl-2 pr-10 rounded-lg dark:text-gray-50 dark:border-gray-600"
+          className="ml-7 bg-transparent w-[230px] dark:text-[#eee] duration-300 dark:bg-[#1a1e52] border-gray-600  focus:border-black focus:w-[300px] border-2 outline-none h-10 pl-2 pr-10 rounded-lg dark:border-gray-600"
           type="text"
           name="query"
           placeholder="search"
@@ -52,13 +52,13 @@ export default function Search() {
           onChange={(e) => setSearch(e.target.value)}
         />
         <button type="submit" className="absolute right-2 top-2">
-          <CgSearch className="text-[23px]" />
+          <CgSearch className="text-[23px] dark:text-gray-600" />
         </button>
       </div>
       <div>
         <Popover open={open} placement="bottom">
           <PopoverHandler onClick={opentags}>
-            <Button className="py-1 h-8">tags search</Button>
+            <Button className="py-1 h-8 dark:bg-[#1a1231] border dark:border-gray-700 dark:text-[#eee] ">tags search</Button>
           </PopoverHandler>
           <PopoverContent className="max-w-96 z-[100]">
             <Typography variant="h6" color="blue-gray" className="mb-2">
@@ -73,7 +73,7 @@ export default function Search() {
               />
               <button
                 onClick={() => postSearch()}
-                className=" mt-1 select-none mx-auto bg-purple-900 border border-gray-300 rounded-lg shadow-md px-3 py-2 text-sm font-medium text-white hover:bg-[#43034a] focus:outline-none"
+                className=" mt-1 select-none mx-auto dark:bg-[#291d4d] bg-purple-900 border border-gray-300 rounded-lg shadow-md px-3 py-2 text-sm font-medium text-white hover:bg-[#43034a] focus:outline-none"
               >
                 search
               </button>

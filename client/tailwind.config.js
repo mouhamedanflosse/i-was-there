@@ -21,7 +21,7 @@ module.exports = withMT({
       gridTemplateColumns: {
         "auto-fill": "repeat(auto-fit, minmax(300px, 1fr))",
       },
-      backgroundColor: ['hover', 'dark', 'dark:hover'],
+      // backgroundColor: ['hover', 'dark', 'dark:hover'],
     },
   },
   plugins: [],

@@ -1,8 +1,13 @@
 html {
-    background-color: #1b1942;
     background-color: #eee;
     margin: 0;
     padding: 0;
+}
+html.dark {
+    background: #d8d4d4;
+    background: #291d4d;
+    /* background: #212044ef; */
+    transition: all 0.3s;
 }
 
 input:-webkit-autofill,
