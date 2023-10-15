@@ -46,7 +46,7 @@ export default function SignOut({UserProfile,location}) {
     <>
       <button
         onClick={handleOpen}
-        className="flex mt-1 select-none mx-auto items-center bg-purple-900 border border-gray-300 rounded-lg shadow-md px-3 py-2 text-sm font-medium text-white hover:bg-[#43034a]"
+        className="flex mt-1 dark:border-gray-900 select-none mx-auto items-center bg-purple-900 border border-gray-300 rounded-lg shadow-md px-3 py-2 text-sm font-medium text-white hover:bg-[#43034a]"
       >
         <TbLogout className="text-[20px] mr-1 my-0" />
         <span>sign Out</span>

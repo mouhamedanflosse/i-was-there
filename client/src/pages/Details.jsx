@@ -91,18 +91,29 @@ export default function Details({ UserProfile, darkMode }) {
             />
           </CardHeader>
           <CardBody className="grow w-80">
-            <Typography variant="h6" color="gray" className="mb-4 uppercase ">
+            <Typography
+              variant="h6"
+              color={darkMode ? "" : "gray"}
+              className="mb-4 uppercase dark:text-[#c6c2c2]"
+            >
               #{post.tags.join(" #")}
             </Typography>
-            <Typography variant="h6" color="gray" className="mb-4 uppercase">
+            <Typography variant="h6" className="mb-4 uppercase">
               <span className="text-green-500">
                 posted {moment(post.createdAt).fromNow()}
               </span>
             </Typography>
-            <Typography variant="h4" color="blue-gray" className="mb-2">
+            <Typography
+              variant="h4"
+              color={darkMode ? "" : "blue-gray"}
+              className="mb-2  dark:text-[#c6c2c2]"
+            >
               {post.title}
             </Typography>
-            <Typography color="gray" className="mb-1 font-normal">
+            <Typography
+              color={darkMode ? "" : "gray"}
+              className="mb-1 font-normal dark:text-[#a9a5a5]"
+            >
               {post.message}
             </Typography>
             <Typography
@@ -136,21 +147,21 @@ export default function Details({ UserProfile, darkMode }) {
                     />
                   )}
                 </div>
-                {post.likes.length}
+                <span className="text-[#08764e]">{post.likes.length}</span>
               </div>
               <AiOutlineComment
                 onClick={() => setOpenComments(true)}
-                className="text-[28px] cursor-pointer z-10"
+                className="text-[28px] cursor-pointer z-10 dark:text-[#b0adad]"
               />
-              <FaRegShareSquare className="text-[25px] ml-1 cursor-pointer " />
+              <FaRegShareSquare className="text-[25px] ml-1 cursor-pointer dark:text-[#b0adad]" />
             </div>
           </CardBody>
         </Card>
-        <div className="bg-white grow w-[250px] h-96 overflow-y-auto">
+        <div className="bg-white grow w-[250px] dark:bg-[#1a1231] h-96 overflow-y-auto">
           <Typography
             variant="h6"
-            color="gray"
-            className="mb-4 text-center mt-2 uppercase"
+            color={darkMode ? "" : "gray"}
+            className="mb-4 text-center mt-2 dark:text-[#eee] uppercase"
           >
             you might also like :
           </Typography>
