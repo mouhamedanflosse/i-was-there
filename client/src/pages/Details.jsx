@@ -157,7 +157,7 @@ export default function Details({ UserProfile, darkMode }) {
             </div>
           </CardBody>
         </Card>
-        <div className="bg-white grow w-[250px] dark:bg-[#1a1231] h-96 overflow-y-auto">
+        <div className="bg-white grow w-[250px] dark:bg-[#1a1231] h-96 overflow-y-auto noScrollBar">
           <Typography
             variant="h6"
             color={darkMode ? "" : "gray"}

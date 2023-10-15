@@ -9,7 +9,7 @@ const auth = (auth = { authData: null ,loading :false}, action) => {
       localStorage.setItem("profile", JSON.stringify(action?.data));
       return { ...auth, authData: action?.data };
     case actionType.logOut:
-      localStorage.clear();
+      localStorage.removeItem("profile");
       return { ...auth, authData: null };
     default:
       return auth;

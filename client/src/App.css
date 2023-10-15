@@ -135,3 +135,10 @@ div:has(.input) {
     }
  }
 
+/* ------------------remove scroll bar */
+.noScrollBar::-webkit-scrollbar {
+   width: 0 !important;
+}
+.noScrollBar {
+   scrollbar-width: none;
+}

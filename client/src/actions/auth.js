@@ -10,10 +10,11 @@ export const signUp = (fromData, navigate) => async (dispatch) => {
     dispatch({type : actionType.end_loading})
     navigate("/");
   } catch (err) {
+    console.log(err)
     dispatch({type : actionType.end_loading})
-    if (err.response.data.error.message === "Email is already in use") {
-      toast.error("Email is already in use");
-    }
+    // if (err.response.data.error.message === "Email is already in use") {
+    //   toast.error("Email is already in use");
+    // }
   }
 };
 export const signIn = (fromData, navigate) => async (dispatch) => {
@@ -24,12 +25,13 @@ export const signIn = (fromData, navigate) => async (dispatch) => {
     dispatch({type : actionType.end_loading})
     navigate("/");
   } catch (err) {
+    console.log(err)
     dispatch({type : actionType.end_loading})
-    if (err.response.data.error.message === "Incorrect password") {
-      toast.error("Incorrect password");
-    }
-    if (err.response.data.error.message === "Email does not exist") {
-      toast.error("Email does not exist");
-    }
+    // if (err.response.data.error.message === "Incorrect password") {
+    //   toast.error("Incorrect password");
+    // }
+    // if (err.response.data.error.message === "Email does not exist") {
+    //   toast.error("Email does not exist");
+    // }
   }
 };
