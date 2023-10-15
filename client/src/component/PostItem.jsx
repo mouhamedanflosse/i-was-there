@@ -214,7 +214,7 @@ export default function PostItem({ postItem, index }) {
                       />
                     )}
                   </div>
-                  <span className="dark:text-[#08764e] font-semibold">
+                  <span className="text-[#08764e] font-semibold">
                   {postItem.likes.length}</span>
                 </div>
               </div>

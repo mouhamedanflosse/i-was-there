@@ -35,3 +35,4 @@ export default function PostPagination({data, tags, searchQuery }) {
     />
   );
 }
+ 

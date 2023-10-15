@@ -18,7 +18,7 @@ import axios from "axios";
 import { actionType } from "../constants/actionType";
 import { signUp } from "../actions/auth"
 
-export default function SignUp() {
+export default function SignUp({darkMode}) {
   const [showPassword, setShowPassword] = useState(false);
   const [matchedpwd, setMatchedpwd] = useState("");
   const {loading} = useSelector((state) => state.auth)
@@ -122,92 +122,98 @@ export default function SignUp() {
           <div className="flex flex-col justify-center gap-2">
             <div className="flex  gap-4">
               <div className="flex flex-col justify-between">
-                <p className="text-red-600 text-[12px] mb-[2px]  font-semibold ml-1">
+                <p className="text-pink-600 dark:text-pink-800 text-[12px] mb-[2px]  font-semibold ml-1">
                   {formik.touched.firstName && formik.errors.emtpyfirstName}
                 </p>
-                <p className="text-red-600 text-[12px] mb-[2px] font-semibold ml-1">
+                <p className="text-pink-600 dark:text-pink-800 text-[12px] mb-[2px] font-semibold ml-1">
                   {formik.errors.firstNameError}
                 </p>
                 <Input
                   id="firstName"
                   name="firstName"
-                  className="input"
+                  className="input dark:text-[#eee]"
                   size="md"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.firstName}
                   label="frist Name"
+                  color={darkMode ? "blue-gray" : ""}
                 />
               </div>
               <div className="flex flex-col justify-between">
-                <p className="text-red-600 text-[12px] mb-[2px] font-semibold ml-1">
+                <p className="text-pink-600 dark:text-pink-800 text-[12px] mb-[2px] font-semibold ml-1">
                   {formik.touched.lastName && formik.errors.emtpylastName}
                 </p>
-                <p className="text-red-600 text-[12px] mb-[2px] font-semibold ml-1">
+                <p className="text-pink-600 dark:text-pink-800 text-[12px] mb-[2px] font-semibold ml-1">
                   {formik.errors.lastNameError}
                 </p>
                 <Input
                   id="lastName"
                   name="lastName"
                   size="md"
-                  className="input"
+                  className="input dark:text-[#eee]"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.lastName}
                   label="last Name"
+                  color={darkMode ? "blue-gray" : ""}
                 />
               </div>
             </div>
             <div>
-              <p className="text-red-600 text-[12px] mb-[2px] font-semibold ml-1">
+              <p className="text-pink-600 dark:text-pink-800 text-[12px] mb-[2px] font-semibold ml-1">
                 {formik.touched.email && formik.errors.emtpyUser}
               </p>
-              <p className="text-red-600 text-[12px] mb-[2px] font-semibold ml-1">
+              <p className="text-pink-600 dark:text-pink-800 text-[12px] mb-[2px] font-semibold ml-1">
                 {formik.errors.email}
               </p>
               <Input
                 id="email"
                 name="email"
                 size="lg"
+                className="dark:text-[#eee]"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.email}
                 label="Email"
+                color={darkMode ? "blue-gray" : ""}
               />
             </div>
             <div className="relative">
-              <p className="text-red-600 text-[12px] mb-[2px] font-semibold ml-1">
+              <p className="text-pink-600 dark:text-pink-800 text-[12px] mb-[2px] font-semibold ml-1">
                 {formik.touched.password && formik.errors.emtpyPassword}
               </p>
-              <p className="text-red-600 text-[12px] mb-[2px] font-semibold ml-1">
+              <p className="text-pink-600 dark:text-pink-800 text-[12px] mb-[2px] font-semibold ml-1">
                 {formik.errors.passwordError}
               </p>
               <Input
                 type={showPassword ? "text" : "password"}
                 id="password"
                 name="password"
+                className="dark:text-[#eee]"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.password}
                 size="lg"
                 label="Password"
+                color={darkMode ? "blue-gray" : ""}
               />
               <div className={`cursor-pointer bottom-4 right-3 absolute `}>
                 {!showPassword ? (
                   <PiEyeClosedBold
                     onClick={() => setShowPassword((prevState) => !prevState)}
-                    className="text-[20px]"
+                    className="text-[20px] dark:text-[#eee]"
                   />
                 ) : (
                   <PiEyeBold
                     onClick={() => setShowPassword((prevState) => !prevState)}
-                    className="text-[20px]"
+                    className="text-[20px] dark:text-[#eee]"
                   />
                 )}
               </div>
             </div>
             <div className="relative">
-              <p className="text-red-600 text-[12px] mb-[2px] font-semibold ml-1">
+              <p className="text-pink-600 dark:text-pink-800 text-[12px] mb-[2px] font-semibold ml-1">
                 {formik.touched.passwordConfirm &&
                   formik.errors.emtpypasswordConfirm}
               </p>
@@ -219,8 +225,10 @@ export default function SignUp() {
                 onBlur={formik.handleBlur}
                 value={formik.values.passwordConfirm}
                 label="Confirm"
+                className="dark:text-[#eee]"
                 type="password"
                 ref={cofRef}
+                color={darkMode ? "blue-gray" : ""}
               />
               <div className="w-4 h-4 bottom-4 right-3 absolute">
                 {matchedpwd === true && formik.values.passwordConfirm ? (
@@ -240,7 +248,7 @@ export default function SignUp() {
             {loading ? <Spinner className="w-6 mx-auto" color="white" /> : "sign up"}
           </Button>
           <CustomGoogleButton login={loginWithGoogle} />
-          <Typography color="gray" className="mt-4 text-center font-normal">
+          <Typography  color={darkMode ? "" : "gray"} className="mt-4 text-center dark:text-[#cccaca] font-normal">
             already have an account?{" "}
             <span
               onClick={() => navigate("/Sign-in")}

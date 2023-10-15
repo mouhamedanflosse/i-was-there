@@ -60,20 +60,22 @@ function App() {
                 />
                 <Route path="/posts" element={<Home />} />
                 <Route path="/posts/search" element={<Home />} />
+
                 <Route
                   path="/post/Details/:id"
-                  element={<Details UserProfile={UserProfile} />}
+                  element={<Details UserProfile={UserProfile} darkMode={darkMode} />}
                 />
+
                 <Route
                   path="/sign-in"
                   element={
-                    !UserProfile ? <SignIn /> : <Navigate to="/posts" replace />
+                    !UserProfile ? <SignIn darkMode={darkMode} /> : <Navigate to="/posts" replace />
                   }
                 />
                 <Route
                   path="/sign-up"
                   element={
-                    !UserProfile ? <SignUp /> : <Navigate to="/posts" replace />
+                    !UserProfile ? <SignUp darkMode={darkMode} /> : <Navigate to="/posts" replace />
                   }
                 />
               </Routes>

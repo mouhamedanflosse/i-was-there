@@ -58,18 +58,19 @@ export default function Search() {
       <div>
         <Popover open={open} placement="bottom">
           <PopoverHandler onClick={opentags}>
-            <Button className="py-1 h-8 dark:bg-[#1a1231] border dark:border-gray-700 dark:text-[#eee] ">tags search</Button>
+            <Button className="py-1 h-8 dark:bg-[#1a1231] dark:border dark:border-gray-700 dark:text-[#eee] ">tags search</Button>
           </PopoverHandler>
           <PopoverContent className="max-w-96 z-[100]">
             <Typography variant="h6" color="blue-gray" className="mb-2">
               put comma between two each tag
             </Typography>
-            <div className="flex gap-2">
+            <div className="flex gap-2 text-[#eee]">
               <Input
                 label="tags"
                 type="text"
                 value={tags}
                 onChange={(e) => setTags(e.target.value)}
+                className="text-[#eee]"
               />
               <button
                 onClick={() => postSearch()}

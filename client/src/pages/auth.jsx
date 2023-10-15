@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { actionType } from "../constants/actionType";
 import { signIn } from "../actions/auth"
 
-export default function SignIn() {
+export default function SignIn({darkMode}) {
   const [showPassword, setShowPassword] = useState(false);
   const {loading} = useSelector((state) => state.auth)
 
@@ -95,10 +95,10 @@ export default function SignIn() {
         >
           <div className="mb-4 flex flex-col gap-6">
             <div>
-              <p className="text-red-600 text-[14px] font-semibold mb-2 ml-3">
+              <p className="text-pink-600 dark:text-pink-800 text-[14px] font-semibold mb-2 ml-3">
                 {formik.touched.email && formik.errors.emtpyUser}
               </p>
-              <p className="text-red-600 text-[14px] font-semibold mb-2 ml-3">
+              <p className="text-pink-600 dark:text-pink-800 text-[14px] font-semibold mb-2 ml-3">
                 {formik.errors.email}
               </p>
               <Input
@@ -109,13 +109,15 @@ export default function SignIn() {
                 onBlur={formik.handleBlur}
                 value={formik.values.email}
                 label="Email"
+                className="dark:text-[#eee]"
+                color={darkMode ? "blue-gray" : ""}
               />
             </div>
             <div className="relative">
-              <p className="text-red-600 text-[14px] font-semibold mb-2 ml-3">
+              <p className="text-pink-600 dark:text-pink-800 text-[14px] font-semibold mb-2 ml-3">
                 {formik.touched.password && formik.errors.emtpyPassword}
               </p>
-              <p className="text-red-600 text-[14px] font-semibold mb-2 ml-3">
+              <p className="text-pink-600 dark:text-pink-800 text-[14px] font-semibold mb-2 ml-3">
                 {formik.errors.password}
               </p>
               <Input
@@ -126,18 +128,20 @@ export default function SignIn() {
                 onBlur={formik.handleBlur}
                 value={formik.values.password}
                 size="lg"
+                className="dark:text-[#eee]"
                 label="Password"
+                color={darkMode ? "blue-gray" : ""}
               />
               <div className={` cursor-pointer bottom-4 right-3 absolute `}>
                 {!showPassword ? (
                   <PiEyeClosedBold
                     onClick={() => setShowPassword((prevState) => !prevState)}
-                    className="text-[20px]"
+                    className="text-[20px] dark:text-[#eee]"
                   />
                 ) : (
                   <PiEyeBold
                     onClick={() => setShowPassword((prevState) => !prevState)}
-                    className="text-[20px]"
+                    className="text-[20px] dark:text-[#eee]"
                   />
                 )}
               </div>
@@ -147,7 +151,7 @@ export default function SignIn() {
             {loading ? <Spinner className="w-6 mx-auto" color="white" /> : "sign in"}
           </Button>
           <CustomGoogleButton login={loginWithGoogle} />
-          <Typography color="gray" className="mt-4 text-center font-normal">
+          <Typography  color={darkMode ? "" : "gray"} className="mt-4 text-center dark:text-[#cccaca] font-normal">
             dont have an account?{" "}
             <span
               onClick={() => navigate("/Sign-up")}
