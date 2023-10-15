@@ -16,12 +16,12 @@ import CustomGoogleButton from "../component/GoogleButton";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { actionType } from "../constants/actionType";
-import { signUp } from "../actions/auth"
+import { signUp } from "../actions/auth";
 
-export default function SignUp({darkMode}) {
+export default function SignUp({ darkMode }) {
   const [showPassword, setShowPassword] = useState(false);
   const [matchedpwd, setMatchedpwd] = useState("");
-  const {loading} = useSelector((state) => state.auth)
+  const { loading } = useSelector((state) => state.auth);
   // submiting state
   const [submiting, setSubmiting] = useState(false);
 
@@ -245,10 +245,17 @@ export default function SignUp({darkMode}) {
             </div>
           </div>
           <Button type="submit" className="mt-6" fullWidth>
-            {loading ? <Spinner className="w-6 mx-auto" color="white" /> : "sign up"}
+            {loading ? (
+              <Spinner className="w-6 mx-auto" color="white" />
+            ) : (
+              "sign up"
+            )}
           </Button>
           <CustomGoogleButton login={loginWithGoogle} />
-          <Typography  color={darkMode ? "" : "gray"} className="mt-4 text-center dark:text-[#cccaca] font-normal">
+          <Typography
+            color={darkMode ? "" : "gray"}
+            className="mt-4 text-center dark:text-[#cccaca] font-normal"
+          >
             already have an account?{" "}
             <span
               onClick={() => navigate("/Sign-in")}
