@@ -44,16 +44,22 @@ export default function Comment({
     setUpdating(comment._id);
   };
   return (
-    <div className="h-fit relative">
+    <div className="h-fit relative pl-2">
       <div className="m-0 flex items-center justify-start gap-4 pt-0">
-        <Avatar
-          size="lg"
-          className="w-7 h-7"
-          variant="circular"
-          src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
-          alt="tania andrew"
-        />
-        <p className="text-black text-[15px] 2Xsm:text-[13px] ">
+        {comment.selectedFile ? (
+          <Avatar
+            size="lg"
+            className="w-7 h-7"
+            variant="circular"
+            src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
+            alt="tania andrew"
+          />
+        ) : (
+          <div className=" flex justify-center outline  outline-2 outline-offset-[2px] outline-gray-900 dark:outline-gray-100 text-white bg-[#008066] font-[540] text-[16px] items-center  relative object-cover object-center rounded-full w-5 h-5 p-0.5">
+            {comment.name.charAt(0)}
+          </div>
+        )}
+        <p className="text-black dark:text-[#eee] text-[15px] 2Xsm:text-[13px] ">
           {comment.name}
         </p>
         <p className="text-blue-800 font-semibold  text-[11px] ">
@@ -73,7 +79,9 @@ export default function Comment({
         )}
       </div>
       <CardBody className="mb-1 p-0">
-        <p className="text-[14px] ml-12 ">{comment.commentText}</p>
+        <p className="text-[14px] mt-1 mb-3  ml-4 dark:text-[#c4bfbf]">
+          {comment.commentText}
+        </p>
         {/* <hr className="w-[98%] bg-blue-gray-600 opacity-40 h-[1px] mx-2 mt-4"/> */}
       </CardBody>
       {openDelete && (

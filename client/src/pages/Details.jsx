@@ -77,7 +77,7 @@ export default function Details({ UserProfile, darkMode }) {
   return (
     post && (
       <div className="mt-5 flex justify-center items-center gap-[26px] flex-wrap">
-        <Comments open={openComments} setOpen={setOpenComments} post={post} />
+        <Comments open={openComments} setOpen={setOpenComments} darkMode post={post} />
         <Card className="w-full grow  max-w-[48rem] m-4 flex-row flex-wrap dark:bg-[#1a1231]">
           <CardHeader
             shadow={false}

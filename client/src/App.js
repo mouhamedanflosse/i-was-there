@@ -31,19 +31,19 @@ function App() {
   useEffect(() => {
     if (user === "true") {
       setDarkMode(true);
-      window.document.documentElement.classList.add("dark")
+      window.document.documentElement.classList.add("dark");
     } else {
       setDarkMode(false);
-      window.document.documentElement.classList.remove("dark")
+      window.document.documentElement.classList.remove("dark");
     }
   }, []);
-  const darkOrLight =  async (dark) => {
+  const darkOrLight = async (dark) => {
     setDarkMode(dark);
     localStorage.setItem("dark", `${dark}`);
     if (dark) {
-      window.document.documentElement.classList.add("dark")
+      window.document.documentElement.classList.add("dark");
     } else {
-      window.document.documentElement.classList.remove("dark")
+      window.document.documentElement.classList.remove("dark");
     }
   };
   return (
@@ -52,30 +52,46 @@ function App() {
         <div className="">
           <div className=" w-full h-full pb-1">
             <div className="max-w-6xl w-full mx-auto">
-              <Header darkOrLight={darkOrLight} darkMode={darkMode}/>
+              <Header darkOrLight={darkOrLight} darkMode={darkMode} />
               <Routes>
                 <Route
                   path="/"
                   element={<Navigate to="/posts?page=1" replace />}
                 />
-                <Route path="/posts" element={<Home />} />
-                <Route path="/posts/search" element={<Home />} />
+
+                <Route path="/posts" element={<Home darkMode={darkMode} />} />
+
+                <Route
+                  path="/posts/search"
+                  element={<Home darkMode={darkMode} />}
+                />
 
                 <Route
                   path="/post/Details/:id"
-                  element={<Details UserProfile={UserProfile} darkMode={darkMode} />}
+                  element={
+                    <Details UserProfile={UserProfile} darkMode={darkMode} />
+                  }
                 />
 
                 <Route
                   path="/sign-in"
                   element={
-                    !UserProfile ? <SignIn darkMode={darkMode} /> : <Navigate to="/posts" replace />
+                    !UserProfile ? (
+                      <SignIn darkMode={darkMode} />
+                    ) : (
+                      <Navigate to="/posts" replace />
+                    )
                   }
                 />
+
                 <Route
                   path="/sign-up"
                   element={
-                    !UserProfile ? <SignUp darkMode={darkMode} /> : <Navigate to="/posts" replace />
+                    !UserProfile ? (
+                      <SignUp darkMode={darkMode} />
+                    ) : (
+                      <Navigate to="/posts" replace />
+                    )
                   }
                 />
               </Routes>

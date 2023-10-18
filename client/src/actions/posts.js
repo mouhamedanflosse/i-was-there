@@ -20,18 +20,18 @@ export const createComment = (value) => async (dispatch) => {
   }
 };
 // update Comment
-export const updateComment = (id,post) => async (dispatch) => {
+export const updateComment = (id, post) => async (dispatch) => {
   try {
-    const { data } = await api.updatePostComment(id,post);
+    const { data } = await api.updatePostComment(id, post);
     await dispatch({ type: actionType.fetch_post, payload: data });
   } catch (err) {
     console.log(err);
   }
 };
 // delete Comment
-export const DeleteComment = (id,postId) => async (dispatch) => {
+export const DeleteComment = (id, postId) => async (dispatch) => {
   try {
-    const { data } = await api.deletePostComment(id,postId);
+    const { data } = await api.deletePostComment(id, postId);
     await dispatch({ type: actionType.fetch_post, payload: data });
   } catch (err) {
     console.log(err);
@@ -44,7 +44,6 @@ export const getPostsById = (id) => async (dispatch) => {
     const { data } = await api.fetchPostsById(id);
     // dispatch({type : actionType.end_loading})
     dispatch({ type: actionType.fetch_post, payload: data });
-
   } catch (err) {
     console.log(err);
   }
@@ -105,10 +104,10 @@ export const likePost = (id, like_type) => async (dispatch) => {
 // get similar  posts
 export const getsimilarPost = (post) => async (dispatch) => {
   try {
-    dispatch({type : actionType.start_loading})
+    dispatch({ type: actionType.start_loading });
     const { data } = await api.getSimilarPosts(post);
     dispatch({ type: actionType.similar_posts, payload: data });
-    dispatch({type : actionType.end_loading})
+    dispatch({ type: actionType.end_loading });
   } catch (err) {
     console.log(err);
   }

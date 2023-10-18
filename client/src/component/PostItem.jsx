@@ -24,7 +24,7 @@ import AddPlaces from "./AddPlaces";
 import jwt_decode from "jwt-decode";
 import { useLocation, useNavigate } from "react-router-dom";
 
-export default function PostItem({ postItem, index }) {
+export default function PostItem({ postItem, index, darkMode }) {
   const [likeStatus, setlikeStatus] = useState(false);
   const [openedMenu, setOpenedMenu] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
@@ -112,14 +112,15 @@ export default function PostItem({ postItem, index }) {
           )}
           <Card className="w-full relative max-w-[230px] shadow-lg mx-auto dark:bg-[#1a1231]">
             <AddPlaces
+              darkMode={darkMode}
               updatingPost={edit}
               setEdit={setEdit}
               setOpenedMenu={setOpenedMenu}
               post={postItem}
               UserProfile={userProfile}
             />
-            <Dialog open={open} size="xs" handler={handleOpen}>
-              <DialogHeader>sure you want to delete this post</DialogHeader>
+            <Dialog className="dark:bg-[#1a2227]" open={open} size="xs" handler={handleOpen}>
+              <DialogHeader className="dark:text-[#dad4d4]">sure you want to delete this post</DialogHeader>
               <DialogFooter>
                 <Button
                   variant="text"
@@ -187,9 +188,9 @@ export default function PostItem({ postItem, index }) {
             <CardBody className="pt-2 pb-2">
               <div className="flex items-center justify-between h-16">
                 <div className="max-h-12 max-w-[140px]">
-                <p className="font-semibold text-ellipsis line-clamp-2 dark:text-[#eee]">
-                  #{postItem.tags.join(" #")}
-                </p>
+                  <p className="font-semibold text-ellipsis line-clamp-2 dark:text-[#eee]">
+                    #{postItem.tags.join(" #")}
+                  </p>
                 </div>
                 <div className="flex items-center gap-1.5 font-normal">
                   <div className="relative w-7 h-7 ">
@@ -204,7 +205,7 @@ export default function PostItem({ postItem, index }) {
                       <AiOutlineHeart
                         onClick={() => likepostItem(true)}
                         className="text-[27px] ml-[2px] cursor-pointer ease-in-out duration-300  text-[#08764e]"
-                      />
+                      /> 
                     ) : (
                       <Lottie
                         onClick={() => likepostItem(false)}
@@ -215,11 +216,15 @@ export default function PostItem({ postItem, index }) {
                     )}
                   </div>
                   <span className="text-[#08764e] font-semibold">
-                  {postItem.likes.length}</span>
+                    {postItem.likes.length}
+                  </span>
                 </div>
               </div>
               <div className="h-[40px]">
-                <p className="text-ellipsis line-clamp-2 dark:text-[#c0bdbd]" color="gray ">
+                <p
+                  className="text-ellipsis line-clamp-2 dark:text-[#c0bdbd]"
+                  color="gray "
+                >
                   {postItem.message}
                 </p>
               </div>

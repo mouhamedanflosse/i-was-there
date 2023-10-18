@@ -51,8 +51,8 @@ export default function SignOut({UserProfile,location}) {
         <TbLogout className="text-[20px] mr-1 my-0" />
         <span>sign Out</span>
       </button>
-      <Dialog open={open} size="xs" handler={handleOpen}>
-        <DialogHeader>sure you want to log out</DialogHeader>
+      <Dialog open={open} className="dark:bg-[#1a2227]" size="xs" handler={handleOpen}>
+        <DialogHeader className="dark:text-[#dad4d4]">sure you want to log out</DialogHeader>
         {/* <DialogBody >want to log out</DialogBody> */}
         <DialogFooter>
           <Button

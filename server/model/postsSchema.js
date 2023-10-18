@@ -4,6 +4,7 @@ const commentSchema = new mongoose.Schema({
     commentText: String,
     creator: String,
     name : String,
+    selectedFile : String,
     picutre : String,
     createdAt: {
         type: Date,
@@ -32,5 +33,5 @@ const postsSchema = mongoose.Schema({
     }
 })
 
-const postsMessage = mongoose.model("psotsMessage", postsSchema)
-export default postsMessage
+const psotsmessages = mongoose.model("psotsMessage", postsSchema)
+export default psotsmessages

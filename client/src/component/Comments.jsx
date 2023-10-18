@@ -16,7 +16,7 @@ import { useDispatch } from "react-redux";
 import { updateComment } from "../actions/posts"; 
 import { useRef } from "react";
 
-export default function Comments({ open, setOpen, post }) {
+export default function Comments({ open, setOpen, post,darkMode }) {
   const [comment, setComment] = useState("");
   const [user, setUser] = useState();
   const [upadating, setUpdating] = useState();
@@ -37,6 +37,7 @@ export default function Comments({ open, setOpen, post }) {
             name: user.name,
             picture: user.picture || "",
             commentText: comment,
+            selectedFile : user.picture || null
           },
           id: post._id,
         })
@@ -61,12 +62,12 @@ export default function Comments({ open, setOpen, post }) {
         size="xs"
         open={open}
         handler={handleOpen}
-        className="Xsm:min-w-[320px] Xsm:max-w-[320px] md:max-w-[320px] md:min-w-[320px] lg:min-w-[320px] lg:max-w-[320px] 2xl:min-w-[320px] 2xl:max-w-[320px]  min-w-[320px] max-w-[320px]"
+        className="Xsm:min-w-[320px] dark:bg-[#1a2227] Xsm:max-w-[320px] md:max-w-[320px] md:min-w-[320px] lg:min-w-[320px] lg:max-w-[320px] 2xl:min-w-[320px] 2xl:max-w-[320px]  min-w-[320px] max-w-[320px]"
       >
         <DialogHeader className="justify-between pb-0">
-          <Typography variant="h5" color="blue-gray">
+          <p className="block dark:text-[#eee] antialiased tracking-normal font-sans text-xl font-semibold leading-snug text-blue-gray-900">
             Comments
-          </Typography>
+          </p>
           <IconButton
             color="blue-gray"
             size="sm"
@@ -89,7 +90,7 @@ export default function Comments({ open, setOpen, post }) {
             </svg>
           </IconButton>
         </DialogHeader>
-        <DialogBody className="overflow-y-scroll h-96 pr-2">
+        <DialogBody className="overflow-y-scroll noScrollBar h-96 pr-2">
           <div className="mb-6">
             <div className="mt-1 -ml-2 flex flex-col gap-1">
               {post.comments.map((comment, index) => (
@@ -106,7 +107,7 @@ export default function Comments({ open, setOpen, post }) {
             <div ref={commentRef}></div>
           </div>
         </DialogBody>
-        <DialogFooter className="justify-center gap-2 py-0 pb-2 border-t border-blue-gray-50">
+        <DialogFooter className="justify-center gap-2 py-0 pb-2">
           {user ? (
             <form
               onSubmit={(e) => addComment(e)}
@@ -117,10 +118,11 @@ export default function Comments({ open, setOpen, post }) {
                 label="write comment"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                className="pr-20 mx-auto"
+                className="pr-20 dark:text-[#eee] mx-auto"
                 containerProps={{
                   className: "min-w-0",
                 }}
+                color={darkMode ? "blue-gray" : ""}
               />
               <Button
                 size="sm"

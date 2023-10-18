@@ -8,10 +8,11 @@ import Search from "../component/Search";
 import PostPagination from "../component/Pagination";
 import { getBySearch, getPosts } from "../actions/posts";
 
-export default function Home() {
+export default function Home({ darkMode }) {
   const location = useLocation();
   const dispatch = useDispatch();
   const data = useSelector((state) => state.posts);
+  console.log(data);
   function useQuery() {
     return new URLSearchParams(useLocation().search);
   }
@@ -40,13 +41,18 @@ export default function Home() {
         <Search />
         <div className="flex justify-center relative gap-5 flex-wrap">
           {data.posts?.map((postItem, index) => (
-            <PostItem key={postItem._id} postItem={postItem} index={index} />
+            <PostItem
+              key={postItem._id}
+              postItem={postItem}
+              darkMode={darkMode}
+              index={index}
+            />
           ))}
         </div>
         {data.posts && (
-          <PostPagination data={data} searchQuery={searchQuery} tags={tags} />
+          <PostPagination data={data} darkMode={darkMode}  searchQuery={searchQuery} tags={tags} />
         )}
-        <AddPlaces data={true}/>
+        <AddPlaces data={true} darkMode={darkMode} />
       </div>
     )
   );

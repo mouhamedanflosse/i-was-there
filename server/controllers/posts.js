@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import postsMessage from "../model/postsSchema.js";
+import psotsmessages from "../model/postsSchema.js";
 import createHttpError from "http-errors";
 const postsContoroller = {
   getPosts: async (req, res, next) => {
@@ -7,13 +7,12 @@ const postsContoroller = {
     const limit = 8;
     try {
       const satrtingTndex = (Number(page) - 1) * limit;
-      const posts = await postsMessage
+      const posts = await psotsmessages
         .find({}, { __v: 0 })
         .sort({ _id: -1 })
         .limit(limit)
         .skip(satrtingTndex);
-      const total = await postsMessage.countDocuments({});
-
+      const total = await psotsmessages.countDocuments({});
       res.send({
         posts,
         currentPage: Number(page),
@@ -26,7 +25,7 @@ const postsContoroller = {
   getPostsById: async (req, res, next) => {
     const id = req.params.id;
     try {
-      const posts = await postsMessage.findById(id, { __v: 0 });
+      const posts = await psotsmessages.findById(id, { __v: 0 });
       if (!posts) {
         throw createHttpError(404, "this post not exist");
       }
@@ -44,14 +43,14 @@ const postsContoroller = {
     try {
       const limit = 8;
       const satrtingTndex = (Number(page) - 1) * limit;
-      const posts = await postsMessage
+      const posts = await psotsmessages
         .find({
           $or: [{ title }, { tags: { $in: tags.split(",") } }],
         })
         .sort({ _id: -1 })
         .limit(limit)
         .skip(satrtingTndex);
-      const total = await postsMessage.countDocuments({
+      const total = await psotsmessages.countDocuments({
         $or: [{ title }, { tags: { $in: tags.split(",") } }],
       });
       if (!posts) {
@@ -72,7 +71,7 @@ const postsContoroller = {
       const limit = 4;
       console.log(id);
       console.log("sucess 1");
-      let similar_post = await postsMessage
+      let similar_post = await psotsmessages
         .find({
           $or: [{ title }, { tags: { $in: tags } }],
         })
@@ -83,7 +82,7 @@ const postsContoroller = {
       );
       if (similar_post.length === 0) {
         console.log("success 2");
-        similar_post = await postsMessage
+        similar_post = await psotsmessages
           .find({}, { _v: 0 })
           .sort({ _id: 1 })
           .limit(limit);
@@ -99,7 +98,7 @@ const postsContoroller = {
       if (!req.userId) {
         return res.send({ message: "please sign in" });
       }
-      const newPost = new postsMessage({
+      const newPost = new psotsmessages({
         ...post,
         creator: req.userId,
         createdAt: new Date().toISOString(),
@@ -117,7 +116,7 @@ const postsContoroller = {
   DeletePost: async (req, res, next) => {
     const id = req.params.id;
     try {
-      const post = await postsMessage.findByIdAndDelete(id);
+      const post = await psotsmessages.findByIdAndDelete(id);
       if (!post) {
         throw createHttpError(404, "post does not exist");
       }
@@ -134,7 +133,7 @@ const postsContoroller = {
   updatePost: async (req, res, next) => {
     const id = req.params.id;
     try {
-      const post = await postsMessage.findByIdAndUpdate(id, req.body, {
+      const post = await psotsmessages.findByIdAndUpdate(id, req.body, {
         new: true,
       });
       if (!post) {
@@ -154,12 +153,12 @@ const postsContoroller = {
     const id = req.params.id;
     const comment = req.body;
     try {
-      const post = await postsMessage.findById(id, { __v: 0 });
+      const post = await psotsmessages.findById(id, { __v: 0 });
       if (!post) {
         throw createHttpError(404, "post does not exist");
       }
       post.comments.push({ ...comment, createdAt: new Date().toISOString() });
-      const updatedPost = await postsMessage.findByIdAndUpdate(id, post, {
+      const updatedPost = await psotsmessages.findByIdAndUpdate(id, post, {
         new: true,
       });
       res.send(updatedPost);
@@ -172,7 +171,7 @@ const postsContoroller = {
     const id = req.params.id;
     const { commentText, postId } = req.body;
     try {
-      const post = await postsMessage.findById(postId, { __v: 0 });
+      const post = await psotsmessages.findById(postId, { __v: 0 });
       if (!post) {
         throw createHttpError(404, "post does not exist");
       }
@@ -181,7 +180,7 @@ const postsContoroller = {
           ? (comment.commentText = commentText)
           : comment
       );
-      const updatedPost = await postsMessage.findByIdAndUpdate(postId, post, {
+      const updatedPost = await psotsmessages.findByIdAndUpdate(postId, post, {
         new: true,
       });
       res.send(updatedPost);
@@ -194,7 +193,7 @@ const postsContoroller = {
     const id = req.params.id;
     const { postId } = req.body;
     try {
-      const post = await postsMessage.findById(postId, { __v: 0 });
+      const post = await psotsmessages.findById(postId, { __v: 0 });
       // console.log(post)
 
       if (!post) {
@@ -204,7 +203,7 @@ const postsContoroller = {
         (comment) => id !== String(comment._id)
       );
       // console.log(String(post.comments[5]._id))
-      const updatedPost = await postsMessage.findByIdAndUpdate(postId, post, {
+      const updatedPost = await psotsmessages.findByIdAndUpdate(postId, post, {
         new: true,
       });
       res.send(updatedPost);
@@ -219,7 +218,7 @@ const postsContoroller = {
       if (!req.userId) {
         throw createHttpError(401, "please log in");
       }
-      const post = await postsMessage.findById(id);
+      const post = await psotsmessages.findById(id);
       if (!post) {
         throw createHttpError(404, "post does not exist");
       }
@@ -229,7 +228,7 @@ const postsContoroller = {
       } else {
         post.likes = post.likes.filter((id) => id !== String(req.userId));
       }
-      const likedPost = await postsMessage.findByIdAndUpdate(id, post, {
+      const likedPost = await psotsmessages.findByIdAndUpdate(id, post, {
         new: true,
       });
       res.send(likedPost);

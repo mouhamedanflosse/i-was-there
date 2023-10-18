@@ -16,7 +16,7 @@ import { VscAdd } from "react-icons/vsc";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function AddPlaces({ updatingPost, post,data,setEdit,setOpenedMenu}) {
+export default function AddPlaces({ updatingPost, post,data,setEdit,setOpenedMenu,darkMode}) {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate()
@@ -66,7 +66,7 @@ export default function AddPlaces({ updatingPost, post,data,setEdit,setOpenedMen
       // setFormData({...post,name : UserProfile?.name });
     }
   }, [updatingPost]);
-
+  
   return (
     <div className="relative">
       {data && formData.name && (
@@ -85,8 +85,8 @@ export default function AddPlaces({ updatingPost, post,data,setEdit,setOpenedMen
         handler={handleOpen}
         className="bg-transparent z-[100] shadow-none"
       >
-        <Card className="mx-auto w-full max-w-[24rem]">
-          <p className="text-center m-2 text-[22px]">{updatingPost ? "Edit post" : "Add post"}</p>
+        <Card className="mx-auto w-full dark:bg-[#1a2227] max-w-[24rem]">
+          <p className="text-center m-2 text-[22px] dark:text-[#eee]">{updatingPost ? "Edit post" : "Add post"}</p>
           <form onSubmit={addPost}>
             <CardBody className="flex flex-col gap-4">
               <Input
@@ -96,6 +96,8 @@ export default function AddPlaces({ updatingPost, post,data,setEdit,setOpenedMen
                 value={formData.title}
                 label="title"
                 size="lg"
+                className="dark:text-[#eee]"
+                color={darkMode ? "blue-gray" : ""}
               />
               <Input
                 onChange={(e) =>
@@ -104,6 +106,8 @@ export default function AddPlaces({ updatingPost, post,data,setEdit,setOpenedMen
                 value={formData.message}
                 label="message"
                 size="lg"
+                className="dark:text-[#eee]"
+                color={darkMode ? "blue-gray" : ""}
               />
               <Input
                 onChange={(e) =>
@@ -112,16 +116,18 @@ export default function AddPlaces({ updatingPost, post,data,setEdit,setOpenedMen
                 value={formData.tags}
                 label="Tags"
                 size="lg"
+                className="dark:text-[#eee]"
+                color={darkMode ? "blue-gray" : ""}
               />
               <div>
-                <h1 className="font-bold">upload image</h1>
+                <h1 className="font-bold dark:text-[#eee]">upload image</h1>
                 <label
                   htmlFor="formFile"
                   className="flex items-center gap-2 cursor-pointer"
                 >
-                  <AiOutlineCloudUpload className="text-[40px] text-blue-gray-600" />
+                  <AiOutlineCloudUpload className="text-[40px] text-blue-gray-600 dark:text-[#eee]" />
                   <FileBase
-                    className="mt-1 mr-2 cursor-pointer outline-none w-0 file:hidden rounded-sm"
+                    className="mt-1 mr-2 cursor-pointer outline-none w-0 file:hidden  rounded-sm"
                     type="file"
                     id="formFile"
                     multiple={false}
@@ -134,11 +140,12 @@ export default function AddPlaces({ updatingPost, post,data,setEdit,setOpenedMen
                 </label>
               </div>
             </CardBody>
-            <CardFooter className="pt-0">
+            <CardFooter className="pt-0 ">
               <Button
                 variant="gradient"
                 type="submit"
                 fullWidth
+                className=""
               >
                 add
               </Button>
