@@ -43,6 +43,9 @@ export const signIn = (formData) => API.post(`users/signIn`, formData);
 //  user sign up
 export const signUp = (formData) => API.post(`users/signUp`, formData);
 
+//  user sign up
+export const googleAuthentication = (formData) => API.post(`users/googleAuth`, formData);
+
 
 // -------------------commments section
 

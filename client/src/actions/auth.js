@@ -35,3 +35,20 @@ export const signIn = (fromData, navigate) => async (dispatch) => {
     // }
   }
 };
+export const googleAuth = (fromData) => async (dispatch) => {
+  try {
+    dispatch({ type: actionType.start_loading });
+    const { data } = await api.googleAuthentication(fromData);
+    dispatch({ type: actionType.AUTH, data });
+    dispatch({ type: actionType.end_loading });
+  } catch (err) {
+    console.log(err);
+    dispatch({ type: actionType.end_loading });
+    // if (err.response.data.error.message === "Incorrect password") {
+    //   toast.error("Incorrect password");
+    // }
+    // if (err.response.data.error.message === "Email does not exist") {
+    //   toast.error("Email does not exist");
+    // }
+  }
+};

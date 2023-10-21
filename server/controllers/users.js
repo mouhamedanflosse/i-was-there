@@ -2,6 +2,7 @@ import users from "../model/users.js";
 import createHttpError from "http-errors";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import axios from "axios";
 
 const usersController = {
   signIn: async (req, res, next) => {
@@ -49,6 +50,40 @@ const usersController = {
       const token = generateAuthToken(newUser);
 
       res.status(201).json({ result: newUser, token });
+    } catch (error) {
+      next(error);
+    }
+  },
+  googleAuth: async (req, res, next) => {
+    try {
+      const { accessToken } = req.body;
+      const response = await axios.get(
+        `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            Accept: "application/json",
+          },
+        }
+      );
+      const user = response.data;
+      const userExistence = await users.findOne({ email: user.email });
+      if (userExistence) {
+        const { name, email, _id, picture } = userExistence;
+        const Token = await generateAuthToken(userExistence);
+        res
+          .status(201)
+          .json({ result: { name, email, _id, picture }, token: Token });
+      } else {
+        const newUser = await users.create({
+          email: user.email,
+          name: `${user.given_name} ${user.family_name}`,
+          picture: user.picture,
+        });
+        const { name, email, _id, picture } = newUser;
+        const token = await generateAuthToken(newUser);
+        res.status(201).json({ result: { name, email, _id, picture }, token });
+      }
     } catch (error) {
       next(error);
     }

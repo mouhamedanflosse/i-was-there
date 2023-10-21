@@ -40,10 +40,10 @@ export const DeleteComment = (id, postId) => async (dispatch) => {
 // get specific post
 export const getPostsById = (id) => async (dispatch) => {
   try {
-    // dispatch({type : actionType.start_loading})
+    await dispatch({ type: actionType.start_loading });
     const { data } = await api.fetchPostsById(id);
-    // dispatch({type : actionType.end_loading})
-    dispatch({ type: actionType.fetch_post, payload: data });
+    await dispatch({ type: actionType.fetch_post, payload: data });
+    dispatch({ type: actionType.end_loading });
   } catch (err) {
     console.log(err);
   }
@@ -92,7 +92,7 @@ export const likePost = (id, like_type) => async (dispatch) => {
   try {
     const { data } = await api.likePost(id);
     if (like_type === "single") {
-      dispatch({ type: actionType.fetch_post, payload: data });
+      await dispatch({ type: actionType.fetch_post, payload: data });
     } else {
       dispatch({ type: actionType.update, payload: data });
     }

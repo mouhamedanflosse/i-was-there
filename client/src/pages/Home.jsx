@@ -12,7 +12,6 @@ export default function Home({ darkMode }) {
   const location = useLocation();
   const dispatch = useDispatch();
   const data = useSelector((state) => state.posts);
-  console.log(data);
   function useQuery() {
     return new URLSearchParams(useLocation().search);
   }

@@ -69,8 +69,6 @@ const postsContoroller = {
     const { tags, title, _id: id } = req.body;
     try {
       const limit = 4;
-      console.log(id);
-      console.log("sucess 1");
       let similar_post = await psotsmessages
         .find({
           $or: [{ title }, { tags: { $in: tags } }],
@@ -81,7 +79,6 @@ const postsContoroller = {
         (post) => String(post._id) !== id
       );
       if (similar_post.length === 0) {
-        console.log("success 2");
         similar_post = await psotsmessages
           .find({}, { _v: 0 })
           .sort({ _id: 1 })

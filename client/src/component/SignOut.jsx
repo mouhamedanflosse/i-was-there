@@ -39,7 +39,7 @@ export default function SignOut({UserProfile,location}) {
   // ----------useEffect
   useEffect(() => {
     if (jwt_decode(UserProfile?.token)?.exp * 1000 < new Date().getTime()) {
-      logOUt()
+      dispatch({ type: actionType.logOut });
     }
   },[location]) 
   return (

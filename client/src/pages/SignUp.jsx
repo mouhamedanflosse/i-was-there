@@ -112,8 +112,8 @@ export default function SignUp({ darkMode }) {
   return (
     <div className="mx-auto mt-12 w-fit">
       <Card color="transparent" shadow={false}>
-        <Typography className="text-center" variant="h4" color="blue-gray">
-          Sign in
+      <Typography className="text-center dark:text-[#eee]" variant="h4" color={darkMode ? "" : "blue-gray"}>
+          Sign up
         </Typography>
         <form
           onSubmit={formik.handleSubmit}

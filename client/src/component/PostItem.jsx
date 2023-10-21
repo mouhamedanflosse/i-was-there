@@ -17,7 +17,7 @@ import animationData from "../assets/svg/likeAnimation.json";
 import staticData from "../assets/svg/likeAnimationStatic.json";
 import { TbEdit } from "react-icons/tb";
 import { AnimatePresence, motion } from "framer-motion";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { deletePost, likePost } from "../actions/posts";
 import { useEffect } from "react";
 import AddPlaces from "./AddPlaces";
@@ -25,11 +25,12 @@ import jwt_decode from "jwt-decode";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export default function PostItem({ postItem, index, darkMode }) {
-  const [likeStatus, setlikeStatus] = useState(false);
+  const [likeStatus, setlikeStatus] = useState(null);
   const [openedMenu, setOpenedMenu] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
+  const posts = useSelector((state) => state.posts)
 
   const dispatch = useDispatch();
   const location = useLocation();
@@ -41,6 +42,13 @@ export default function PostItem({ postItem, index, darkMode }) {
     setUserProfile(JSON.parse(localStorage.getItem("profile")));
     likechecking();
   }, [location]);
+
+  useEffect(() => {
+    // console.log(likeStatus);
+    // if (userProfile === null) {
+      likechecking();
+    // }
+  }, [postItem]);
 
   const handleOpen = () => setOpen(!open);
 
@@ -77,20 +85,23 @@ export default function PostItem({ postItem, index, darkMode }) {
       console.log(err);
     }
   };
+
   // checking for like status
   const likechecking = async () => {
+    console.log(likeStatus) 
+    if (likeStatus === null) {
     const liked = postItem.likes.find(
       (like) =>
         like === JSON.parse(localStorage.getItem("profile"))?.result?._id ||
         JSON.parse(localStorage.getItem("profile"))?.result?.id
     );
-
     if (liked) {
       setlikeStatus(null);
     } else {
       setlikeStatus(false);
-    }
+    }}
   };
+
   const seeDetails = (id) => {
     navigate(`/post/Details/${id}`);
   };
@@ -119,8 +130,15 @@ export default function PostItem({ postItem, index, darkMode }) {
               post={postItem}
               UserProfile={userProfile}
             />
-            <Dialog className="dark:bg-[#1a2227]" open={open} size="xs" handler={handleOpen}>
-              <DialogHeader className="dark:text-[#dad4d4]">sure you want to delete this post</DialogHeader>
+            <Dialog
+              className="dark:bg-[#1a2227]"
+              open={open}
+              size="xs"
+              handler={handleOpen}
+            >
+              <DialogHeader className="dark:text-[#dad4d4]">
+                sure you want to delete this post
+              </DialogHeader>
               <DialogFooter>
                 <Button
                   variant="text"
@@ -205,7 +223,7 @@ export default function PostItem({ postItem, index, darkMode }) {
                       <AiOutlineHeart
                         onClick={() => likepostItem(true)}
                         className="text-[27px] ml-[2px] cursor-pointer ease-in-out duration-300  text-[#08764e]"
-                      /> 
+                      />
                     ) : (
                       <Lottie
                         onClick={() => likepostItem(false)}

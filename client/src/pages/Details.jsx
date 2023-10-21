@@ -20,36 +20,33 @@ import MorePosts from "../component/MorePosts";
 import LoadingforCards from "../assets/loader/LoadingforCards";
 
 export default function Details({ UserProfile, darkMode }) {
-  const [likeStatus, setlikeStatus] = useState(false);
+  const [likeStatus, setlikeStatus] = useState(null);
   const [openComments, setOpenComments] = useState(false);
   const data = useSelector((state) => state.posts);
   const params = useParams();
 
   const location = useLocation();
 
-  // initializw useNavigate
+  // initialize useNavigate
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { post } = useSelector((state) => state.posts);
-  //   console.log(post);
+  const { post,loading } = useSelector((state) => state.posts);
   useEffect(() => {
-    // setUserProfile(JSON.parse(localStorage.getItem("profile")));
-    const loadingPostDet = async () => {
-      await dispatch(getPostsById(params.id));
-      if (post) {
-        console.log("success 1");
-        console.log(post);
-        likechecking();
-      }
-    };
-    loadingPostDet();
-  }, [location]);
+    dispatch(getPostsById(params.id));
+  }, []);
+  
+  useEffect(() => {
+    if (post && likeStatus === null && !loading) {
+      setTimeout(() => {
+        likechecking(post);
+      }, 200);
+    }
+  }, [post]);
   // checking for like status
-  const likechecking = async () => {
+    const likechecking = async (post) => {
     const liked = await post.likes.find(
       (like) => like === UserProfile?.result?._id || UserProfile?.result?.id
-    );
-    console.log(liked);
+      );
     if (liked) {
       setlikeStatus(null);
     } else {
@@ -165,13 +162,13 @@ export default function Details({ UserProfile, darkMode }) {
           >
             you might also like :
           </Typography>
-          {post && (
             <div className="flex justify-center relative overflow-hidden flex-wrap gap-4 ">
-              <MorePosts post={post} />
-            </div>
-          )}
+              {post ? 
+               <MorePosts post={post} /> : 
+              <LoadingforCards />
+              }
+            </div> 
         </div>
-        {/* <LoadingforCards /> */}
       </div>
     )
   );

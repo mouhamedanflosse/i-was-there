@@ -44,7 +44,7 @@ export default function Search() {
     >
       <div className="relative w-fit">
         <input
-          className="ml-7 bg-transparent w-[230px] dark:text-[#eee] duration-300 dark:bg-[#1a1e52] border-gray-600  focus:border-black focus:w-[300px] border-2 outline-none h-10 pl-2 pr-10 rounded-lg dark:border-gray-600"
+          className="ml-7 bg-transparent w-[230px] dark:text-[#eee] ease-in duration-200 dark:bg-[#1a1e52] border-gray-600  focus:border-black focus:w-[300px]  border-2 outline-none h-10 pl-2 pr-10 rounded-lg dark:border-gray-600"
           type="text"
           name="query"
           placeholder="search"

@@ -21,11 +21,12 @@ import { ToastContainer } from "react-toastify";
 function App() {
   const [UserProfile, setUserProfile] = useState(null);
   const [darkMode, setDarkMode] = useState(localStorage.getItem("dark"));
+  const {authData} = useSelector((state) => state.auth)
 
   // -----------useEffect
   useEffect(() => {
     setUserProfile(JSON.parse(localStorage.getItem("profile")));
-  }, [localStorage.getItem("profile")]);
+  }, [authData]);
 
   const user = localStorage.getItem("dark");
   useEffect(() => {
@@ -37,6 +38,7 @@ function App() {
       window.document.documentElement.classList.remove("dark");
     }
   }, []);
+
   const darkOrLight = async (dark) => {
     setDarkMode(dark);
     localStorage.setItem("dark", `${dark}`);
@@ -46,13 +48,14 @@ function App() {
       window.document.documentElement.classList.remove("dark");
     }
   };
+
   return (
     <ThemeProvider>
       <BrowserRouter>
         <div className="">
           <div className=" w-full h-full pb-1">
             <div className="max-w-6xl w-full mx-auto">
-              <Header darkOrLight={darkOrLight} darkMode={darkMode} />
+              <Header UserProfile={UserProfile} darkOrLight={darkOrLight} darkMode={darkMode} />
               <Routes>
                 <Route
                   path="/"

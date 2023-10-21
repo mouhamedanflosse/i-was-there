@@ -14,11 +14,12 @@ import CustomGoogleButton from "../component/GoogleButton";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { actionType } from "../constants/actionType";
-import { signIn } from "../actions/auth"
+import { signIn } from "../actions/auth";
+import { googleAuth } from "../actions/auth";
 
-export default function SignIn({darkMode}) {
+export default function SignIn({ darkMode }) {
   const [showPassword, setShowPassword] = useState(false);
-  const {loading} = useSelector((state) => state.auth)
+  const { loading } = useSelector((state) => state.auth);
 
   // submiting state
   const [submiting, setSubmiting] = useState(false);
@@ -56,7 +57,6 @@ export default function SignIn({darkMode}) {
   // authenticate with google
   const loginWithGoogle = useGoogleLogin({
     onSuccess: async (response) => {
-      console.log(response)
       const profile = await fetchUserData(response.access_token);
       navigate("/");
     },
@@ -65,19 +65,22 @@ export default function SignIn({darkMode}) {
   // get the user data profile
   const fetchUserData = async (accessToken) => {
     try {
-      const response = await axios.get(
-        `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            Accept: "application/json",
-          },
-        }
-      );
-      dispatch({
-        type: actionType.AUTH,
-        data: { result: response.data, token: accessToken },
-      });
+      // const response = await axios.get(
+      //   `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${accessToken}`,
+      //       Accept: "application/json",
+      //     },
+      //   }
+      // );
+      dispatch(googleAuth({accessToken}));
+      // dispatch(googleAuth({user : {...response.data, token: accessToken}}));
+      // console.log({ ...response.data, token: accessToken});
+      // dispatch({
+      //   type: actionType.AUTH,
+      //   data: { result: response.data, token: accessToken },
+      // });
     } catch (error) {
       console.error(error);
     }
@@ -86,7 +89,11 @@ export default function SignIn({darkMode}) {
   return (
     <div className="mx-auto mt-12 w-fit">
       <Card color="transparent" shadow={false}>
-        <Typography className="text-center" variant="h4" color="blue-gray">
+        <Typography
+          className="text-center dark:text-[#eee]"
+          variant="h4"
+          color={darkMode ? "" : "blue-gray"}
+        >
           Sign in
         </Typography>
         <form
@@ -148,10 +155,17 @@ export default function SignIn({darkMode}) {
             </div>
           </div>
           <Button type="submit" className="mt-6" fullWidth>
-            {loading ? <Spinner className="w-6 mx-auto" color="white" /> : "sign in"}
+            {loading ? (
+              <Spinner className="w-6 mx-auto" color="white" />
+            ) : (
+              "sign in"
+            )}
           </Button>
           <CustomGoogleButton login={loginWithGoogle} />
-          <Typography  color={darkMode ? "" : "gray"} className="mt-4 text-center dark:text-[#cccaca] font-normal">
+          <Typography
+            color={darkMode ? "" : "gray"}
+            className="mt-4 text-center dark:text-[#cccaca] font-normal"
+          >
             dont have an account?{" "}
             <span
               onClick={() => navigate("/Sign-up")}
