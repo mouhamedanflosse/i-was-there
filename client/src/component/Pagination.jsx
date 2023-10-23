@@ -20,6 +20,7 @@ export default function PostPagination({ data, tags, searchQuery, darkMode }) {
   return (
     <Pagination
       count={data.numberOfpages}
+      defaultPage={data.currentPage}
       className={darkMode ? "darkPagination" : ""}
       variant="outlined"
       color={darkMode ? "secondary" : "primary"}

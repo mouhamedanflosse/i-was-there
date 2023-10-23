@@ -4,8 +4,10 @@ import { actionType } from "../constants/actionType";
 // get all posts
 export const getPosts = (page) => async (dispatch) => {
   try {
+    await dispatch({ type: actionType.start_loading });
     const { data } = await api.fetchPosts(page);
     await dispatch({ type: actionType.fetch_all, payload: data });
+    await dispatch({ type: actionType.end_loading });
   } catch (err) {
     console.log(err);
   }

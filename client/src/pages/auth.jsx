@@ -8,7 +8,7 @@ import {
 import { useFormik } from "formik";
 import { useState } from "react";
 import { PiEyeBold, PiEyeClosedBold } from "react-icons/pi";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
 import CustomGoogleButton from "../component/GoogleButton";
 import axios from "axios";
@@ -20,7 +20,6 @@ import { googleAuth } from "../actions/auth";
 export default function SignIn({ darkMode }) {
   const [showPassword, setShowPassword] = useState(false);
   const { loading } = useSelector((state) => state.auth);
-
   // submiting state
   const [submiting, setSubmiting] = useState(false);
 

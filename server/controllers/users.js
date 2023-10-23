@@ -36,7 +36,7 @@ const usersController = {
       const userExistence = await users.findOne({ email });
 
       if (userExistence) {
-        throw createHttpError(409, "Email is already in use");
+        throw createHttpError(409, "Email is already exist");
       }
 
       const hashedPassword = await bcrypt.hash(password, 12);

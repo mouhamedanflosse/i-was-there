@@ -1,4 +1,3 @@
-import { ThemeProvider } from "@material-tailwind/react";
 import "./App.css";
 import Header from "./component/Header";
 import {
@@ -6,27 +5,19 @@ import {
   Route,
   Routes,
   Navigate,
-  useLocation,
 } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { getPosts } from "./actions/posts";
 import { useSelector } from "react-redux";
 import Home from "./pages/Home";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/auth";
 import Details from "./pages/Details";
-import { ToastContainer } from "react-toastify";
+import { Toaster } from "react-hot-toast";
 
 function App() {
-  const [UserProfile, setUserProfile] = useState(null);
   const [darkMode, setDarkMode] = useState(localStorage.getItem("dark"));
-  const {authData} = useSelector((state) => state.auth)
+  const { authData } = useSelector((state) => state.auth);
 
-  // -----------useEffect
-  useEffect(() => {
-    setUserProfile(JSON.parse(localStorage.getItem("profile")));
-  }, [authData]);
 
   const user = localStorage.getItem("dark");
   useEffect(() => {
@@ -50,12 +41,24 @@ function App() {
   };
 
   return (
-    <ThemeProvider>
+    
       <BrowserRouter>
         <div className="">
+          <Toaster
+            toastOptions={{
+              className: "",
+              style: {
+                padding: "5px",
+                fontSize: "13px",
+              },
+            }}
+          />
           <div className=" w-full h-full pb-1">
             <div className="max-w-6xl w-full mx-auto">
-              <Header UserProfile={UserProfile} darkOrLight={darkOrLight} darkMode={darkMode} />
+              <Header
+                darkOrLight={darkOrLight}
+                darkMode={darkMode}
+              />
               <Routes>
                 <Route
                   path="/"
@@ -72,14 +75,14 @@ function App() {
                 <Route
                   path="/post/Details/:id"
                   element={
-                    <Details UserProfile={UserProfile} darkMode={darkMode} />
+                    <Details UserProfile={authData} darkMode={darkMode} />
                   }
                 />
 
                 <Route
                   path="/sign-in"
                   element={
-                    !UserProfile ? (
+                    !authData ? (
                       <SignIn darkMode={darkMode} />
                     ) : (
                       <Navigate to="/posts" replace />
@@ -90,7 +93,7 @@ function App() {
                 <Route
                   path="/sign-up"
                   element={
-                    !UserProfile ? (
+                    !authData ? (
                       <SignUp darkMode={darkMode} />
                     ) : (
                       <Navigate to="/posts" replace />
@@ -102,20 +105,6 @@ function App() {
           </div>
         </div>
       </BrowserRouter>
-      <ToastContainer
-        toastClassName="w-[200px] h-[20px] mx-auto -translate-y-[20px] Xsm:translate-y-0 sm:w-[220px] text-[14px]"
-        position="bottom-center"
-        autoClose={2000}
-        hideProgressBar
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
-    </ThemeProvider>
   );
 }
 

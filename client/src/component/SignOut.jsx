@@ -11,8 +11,7 @@ import { useDispatch } from "react-redux";
 import jwt_decode from "jwt-decode";
 import { actionType } from "../constants/actionType";
 
-export default function SignOut({UserProfile,location}) {
-
+export default function SignOut({ UserProfile, location }) {
   // --------------------------open popup
   const [open, setOpen] = useState(false);
 
@@ -25,23 +24,23 @@ export default function SignOut({UserProfile,location}) {
 
   // ------------------logOut
   const dispatch = useDispatch();
-  const logOUt =  async () => {
+  const logOUt = async () => {
     try {
-    await dispatch({ type: actionType.logOut });
-    handleOpen();
-    setTimeout(() => {
-      navigate("/");
-    }, 500);
-  } catch(err) {
-    console.log(err)
-  }
+      await dispatch({ type: actionType.logOut });
+      handleOpen();
+      setTimeout(() => {
+        navigate("/");
+      }, 500);
+    } catch (err) {
+      console.log(err);
+    }
   };
   // ----------useEffect
   useEffect(() => {
     if (jwt_decode(UserProfile?.token)?.exp * 1000 < new Date().getTime()) {
       dispatch({ type: actionType.logOut });
     }
-  },[location]) 
+  }, [location]);
   return (
     <>
       <button
@@ -51,8 +50,15 @@ export default function SignOut({UserProfile,location}) {
         <TbLogout className="text-[20px] mr-1 my-0" />
         <span>sign Out</span>
       </button>
-      <Dialog open={open} className="dark:bg-[#1a2227]" size="xs" handler={handleOpen}>
-        <DialogHeader className="dark:text-[#dad4d4]">sure you want to log out</DialogHeader>
+      <Dialog
+        open={open}
+        className="dark:bg-[#1a2227]"
+        size="xs"
+        handler={handleOpen}
+      >
+        <DialogHeader className="dark:text-[#dad4d4]">
+          sure you want to log out
+        </DialogHeader>
         {/* <DialogBody >want to log out</DialogBody> */}
         <DialogFooter>
           <Button

@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Comments from "../component/Comments";
 import MorePosts from "../component/MorePosts";
 import LoadingforCards from "../assets/loader/LoadingforCards";
+import { toast } from "react-hot-toast";
 
 export default function Details({ UserProfile, darkMode }) {
   const [likeStatus, setlikeStatus] = useState(null);
@@ -30,11 +31,40 @@ export default function Details({ UserProfile, darkMode }) {
   // initialize useNavigate
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { post,loading } = useSelector((state) => state.posts);
+  const { post, loading } = useSelector((state) => state.posts);
   useEffect(() => {
     dispatch(getPostsById(params.id));
   }, []);
-  
+  // ------------copy link
+  async function copyLink() {
+    toast.promise(new Promise(async (resolve, reject) => {
+      setTimeout(() => {
+        try {
+          navigator.clipboard.writeText(window.location.href);
+          resolve();
+        } catch (err) {
+          console.log(err)
+          reject();
+        }
+      }, 1500)
+    }),
+      {
+        loading: "copying...",
+        success: <b>copied</b>,
+        error: <b>Could not copy the link</b>,
+      }
+    );
+  }
+  // async function copyLink() {
+  //   toast.promise();
+  //   try {
+  //     await navigator.clipboard.writeText(window.location.href);
+  //     toast.success("link copied");
+  //   } catch (err) {
+  //     toast.error("something went wrong");
+  //   }
+  // }
+
   useEffect(() => {
     if (post && likeStatus === null && !loading) {
       setTimeout(() => {
@@ -43,10 +73,9 @@ export default function Details({ UserProfile, darkMode }) {
     }
   }, [post]);
   // checking for like status
-    const likechecking = async (post) => {
+  const likechecking = async (post) => {
     const liked = await post.likes.find(
-      (like) => like === UserProfile?.result?._id || UserProfile?.result?.id
-      );
+      (like) => like === UserProfile?.result?._id);
     if (liked) {
       setlikeStatus(null);
     } else {
@@ -74,7 +103,12 @@ export default function Details({ UserProfile, darkMode }) {
   return (
     post && (
       <div className="mt-5 flex justify-center items-center gap-[26px] flex-wrap">
-        <Comments open={openComments} setOpen={setOpenComments} darkMode post={post} />
+        <Comments
+          open={openComments}
+          setOpen={setOpenComments}
+          darkMode
+          post={post}
+        />
         <Card className="w-full grow  max-w-[48rem] m-4 flex-row flex-wrap dark:bg-[#1a1231]">
           <CardHeader
             shadow={false}
@@ -150,7 +184,10 @@ export default function Details({ UserProfile, darkMode }) {
                 onClick={() => setOpenComments(true)}
                 className="text-[28px] cursor-pointer z-10 dark:text-[#b0adad]"
               />
-              <FaRegShareSquare className="text-[25px] ml-1 cursor-pointer dark:text-[#b0adad]" />
+              <FaRegShareSquare
+                onClick={() => copyLink()}
+                className="text-[25px] ml-1 cursor-pointer dark:text-[#b0adad]"
+              />
             </div>
           </CardBody>
         </Card>
@@ -162,12 +199,9 @@ export default function Details({ UserProfile, darkMode }) {
           >
             you might also like :
           </Typography>
-            <div className="flex justify-center relative overflow-hidden flex-wrap gap-4 ">
-              {post ? 
-               <MorePosts post={post} /> : 
-              <LoadingforCards />
-              }
-            </div> 
+          <div className="flex justify-center relative overflow-hidden flex-wrap gap-4 ">
+            {post ? <MorePosts post={post} /> : <LoadingforCards />}
+          </div>
         </div>
       </div>
     )

@@ -8,14 +8,14 @@ import { Avatar } from "@material-tailwind/react";
 import { BiLogIn } from "react-icons/bi";
 import { BsFillMoonStarsFill, BsFillSunFill } from "react-icons/bs";
 
-export default function Header({darkOrLight,darkMode,UserProfile}) {
+export default function Header({darkOrLight,darkMode}) {
   const navigate = useNavigate();
-  // const [UserProfile, setUserProfile] = useState(JSON.parse(localStorage.getItem("profile")));
+  const [UserProfile, setUserProfile] = useState(JSON.parse(localStorage.getItem("profile")));
   const [buttonPath, setButtonPath] = useState();
   const location = useLocation();
 
   useEffect(() => {
-    // setUserProfile(JSON.parse(localStorage.getItem("profile")));
+    setUserProfile(JSON.parse(localStorage.getItem("profile")));
     if (!UserProfile) {
       if (location.pathname === "/sign-in") {
         setButtonPath({ path: "/sign-up", name: "sign up" });
@@ -26,15 +26,6 @@ export default function Header({darkOrLight,darkMode,UserProfile}) {
       }
     }
   }, [location]);
-
-  // useEffect(() => {
-  //   const user = localStorage.getItem("dark");
-  //   if (user === "true") {
-  //     darkOrLight(true);
-  //   } else {
-  //     darkOrLight(false);
-  //   }
-  // }, []);
 
 
   return (
@@ -47,7 +38,7 @@ export default function Header({darkOrLight,darkMode,UserProfile}) {
           alt="logo"
         />
         <div className="flex justify-center gap-5 items-center">
-          <div className="p-1 text-center mr-3 duration-300 rounded-full dark:hover:bg-blue-gray-500 hover:bg-blue-gray-100">
+          <div className="p-1 text-center mr-1 mt-1 duration-300 rounded-full dark:hover:bg-blue-gray-500 hover:bg-blue-gray-100">
             {darkMode ? (
               <BsFillSunFill
                 onClick={() => darkOrLight(false)}
@@ -79,9 +70,9 @@ export default function Header({darkOrLight,darkMode,UserProfile}) {
           ) : (
             <button
               onClick={() => navigate(buttonPath?.path)}
-              className="flex mt-1 select-none mx-auto items-center bg-purple-900 border border-gray-300 dark:border-gray-900 rounded-lg shadow-md px-3 py-2 text-sm font-medium text-white hover:bg-[#43034a]"
+              className="flex select-none mx-auto items-center bg-purple-900 border border-gray-300 dark:border-gray-900 rounded-lg shadow-md px-3 py-2 text-sm font-medium text-white hover:bg-[#43034a]"
             >
-              <BiLogIn className="text-[20px] mr-1 my-0" />
+              <BiLogIn className="text-[20px] my-0" />
               <span>{buttonPath?.name}</span>
             </button>
           )}

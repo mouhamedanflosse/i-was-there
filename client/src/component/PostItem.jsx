@@ -30,7 +30,8 @@ export default function PostItem({ postItem, index, darkMode }) {
   const [userProfile, setUserProfile] = useState(null);
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
-  const posts = useSelector((state) => state.posts)
+  const posts = useSelector((state) => state.posts);
+  const { loading } = useSelector((state) => state.posts);
 
   const dispatch = useDispatch();
   const location = useLocation();
@@ -46,6 +47,9 @@ export default function PostItem({ postItem, index, darkMode }) {
   useEffect(() => {
     // console.log(likeStatus);
     // if (userProfile === null) {
+    // setTimeout(() => {
+    //   likechecking();
+    // }, 1000);
       likechecking();
     // }
   }, [postItem]);
@@ -88,23 +92,23 @@ export default function PostItem({ postItem, index, darkMode }) {
 
   // checking for like status
   const likechecking = async () => {
-    console.log(likeStatus) 
     if (likeStatus === null) {
-    const liked = postItem.likes.find(
-      (like) =>
-        like === JSON.parse(localStorage.getItem("profile"))?.result?._id ||
-        JSON.parse(localStorage.getItem("profile"))?.result?.id
-    );
-    if (liked) {
-      setlikeStatus(null);
-    } else {
-      setlikeStatus(false);
-    }}
+      const liked = postItem.likes.find(
+        (like) =>
+          like === JSON.parse(localStorage.getItem("profile"))?.result?._id
+      );
+      if (liked) {
+        setlikeStatus(null);
+      } else {
+        setlikeStatus(false);
+      }
+    }
   };
 
   const seeDetails = (id) => {
     navigate(`/post/Details/${id}`);
   };
+
   return (
     postItem && (
       <AnimatePresence>

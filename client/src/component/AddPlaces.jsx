@@ -97,7 +97,7 @@ export default function AddPlaces({ updatingPost, post,data,setEdit,setOpenedMen
                 label="title"
                 size="lg"
                 className="dark:text-[#eee]"
-                color={darkMode ? "blue-gray" : ""}
+                color={darkMode ? "blue-gray" : "gray"}
               />
               <Input
                 onChange={(e) =>
@@ -107,7 +107,7 @@ export default function AddPlaces({ updatingPost, post,data,setEdit,setOpenedMen
                 label="message"
                 size="lg"
                 className="dark:text-[#eee]"
-                color={darkMode ? "blue-gray" : ""}
+                color={darkMode ? "blue-gray" : "gray"}
               />
               <Input
                 onChange={(e) =>
@@ -117,7 +117,7 @@ export default function AddPlaces({ updatingPost, post,data,setEdit,setOpenedMen
                 label="Tags"
                 size="lg"
                 className="dark:text-[#eee]"
-                color={darkMode ? "blue-gray" : ""}
+                color={darkMode ? "blue-gray" : "gray"}
               />
               <div>
                 <h1 className="font-bold dark:text-[#eee]">upload image</h1>
