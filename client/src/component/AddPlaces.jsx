@@ -16,7 +16,7 @@ import { VscAdd } from "react-icons/vsc";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function AddPlaces({ updatingPost, post,data,setEdit,setOpenedMenu,darkMode}) {
+export default function AddPlaces({ updatingPost, post,data,setEdit,setOpenedMenu,darkMode,path}) {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate()
@@ -41,6 +41,9 @@ export default function AddPlaces({ updatingPost, post,data,setEdit,setOpenedMen
         setEdit(false)
         handleOpen()
         setOpenedMenu(false)
+        if (path) {
+          navigate(path)
+        }
       } else {
         handleOpen()
         await setTimeout(() => {

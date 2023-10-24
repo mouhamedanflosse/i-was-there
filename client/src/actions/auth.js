@@ -21,7 +21,7 @@ export const signIn = (fromData, navigate,location) => async (dispatch) => {
     const { data } = await api.signIn(fromData);
     dispatch({ type: actionType.AUTH, data });
     dispatch({ type: actionType.end_loading });
-    navigate(-1);
+    navigate("/");
   } catch (err) {
     dispatch({ type: actionType.end_loading });
     toast.error(err.response.data.error.message)

@@ -8,14 +8,15 @@ import { Avatar } from "@material-tailwind/react";
 import { BiLogIn } from "react-icons/bi";
 import { BsFillMoonStarsFill, BsFillSunFill } from "react-icons/bs";
 
-export default function Header({darkOrLight,darkMode}) {
+export default function Header({darkOrLight,darkMode,authData}) {
   const navigate = useNavigate();
-  const [UserProfile, setUserProfile] = useState(JSON.parse(localStorage.getItem("profile")));
+  const [UserProfile, setUserProfile] = useState(authData);
   const [buttonPath, setButtonPath] = useState();
   const location = useLocation();
 
+
   useEffect(() => {
-    setUserProfile(JSON.parse(localStorage.getItem("profile")));
+    setUserProfile(authData);
     if (!UserProfile) {
       if (location.pathname === "/sign-in") {
         setButtonPath({ path: "/sign-up", name: "sign up" });
@@ -25,7 +26,7 @@ export default function Header({darkOrLight,darkMode}) {
         setButtonPath({ path: "/sign-in", name: "sign in" });
       }
     }
-  }, [location]);
+  }, [location,authData]);
 
 
   return (

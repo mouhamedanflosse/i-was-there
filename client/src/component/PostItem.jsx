@@ -25,13 +25,11 @@ import jwt_decode from "jwt-decode";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export default function PostItem({ postItem, index, darkMode }) {
-  const [likeStatus, setlikeStatus] = useState(null);
+  const [likeStatus, setlikeStatus] = useState(false);
   const [openedMenu, setOpenedMenu] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
-  const posts = useSelector((state) => state.posts);
-  const { loading } = useSelector((state) => state.posts);
 
   const dispatch = useDispatch();
   const location = useLocation();
@@ -41,7 +39,7 @@ export default function PostItem({ postItem, index, darkMode }) {
 
   useEffect(() => {
     setUserProfile(JSON.parse(localStorage.getItem("profile")));
-    likechecking();
+    likechecking(postItem);
   }, [location]);
 
   useEffect(() => {
@@ -50,14 +48,13 @@ export default function PostItem({ postItem, index, darkMode }) {
     // setTimeout(() => {
     //   likechecking();
     // }, 1000);
-      likechecking();
+    likechecking(postItem);
     // }
   }, [postItem]);
 
   const handleOpen = () => setOpen(!open);
 
   // ---------------upadte post
-
   const deletePostItem = async () => {
     try {
       handleOpen();
@@ -69,11 +66,9 @@ export default function PostItem({ postItem, index, darkMode }) {
       console.log(err);
     }
   };
-
   // --------------like post
   const likepostItem = async (like) => {
     try {
-      dispatch(likePost(postItem._id));
       if (
         !localStorage.getItem("profile") ||
         jwt_decode(JSON.parse(localStorage.getItem("profile"))?.token)?.exp *
@@ -89,10 +84,9 @@ export default function PostItem({ postItem, index, darkMode }) {
       console.log(err);
     }
   };
-
   // checking for like status
-  const likechecking = async () => {
-    if (likeStatus === null) {
+  const likechecking = async (postItem) => {
+    if (!likeStatus) {
       const liked = postItem.likes.find(
         (like) =>
           like === JSON.parse(localStorage.getItem("profile"))?.result?._id
@@ -153,7 +147,7 @@ export default function PostItem({ postItem, index, darkMode }) {
                 </Button>
                 <Button
                   onClick={() => deletePostItem()}
-                  className="bg-red-600 hover:bg-red-900 shadow-none hover:shadow-none flex justify-center items-center gap-2 select-none  p-[12 px] text-white rounded-md "
+                  className="bg-red-600 hover:bg-red-900 shadow-none hover:shadow-none flex justify-center items-center gap-2 select-none  p-[12 px] text-white rounded-md"
                 >
                   <span>Confirm</span>
                 </Button>
@@ -208,14 +202,14 @@ export default function PostItem({ postItem, index, darkMode }) {
               </motion.div>
             )}
             <CardBody className="pt-2 pb-2">
-              <div className="flex items-center justify-between h-16">
-                <div className="max-h-12 max-w-[140px]">
+              <div className="flex z-[9] items-center justify-between h-16">
+                <div className="max-h-12 z-[5] max-w-[140px]">
                   <p className="font-semibold text-ellipsis line-clamp-2 dark:text-[#eee]">
                     #{postItem.tags.join(" #")}
                   </p>
                 </div>
-                <div className="flex items-center gap-1.5 font-normal">
-                  <div className="relative w-7 h-7 ">
+                <div className="flex z-[4] items-center gap-1.5 font-normal">
+                  <div className="relative  w-7 h-7 ">
                     {likeStatus === null ? (
                       <Lottie
                         onClick={() => likepostItem(false)}
@@ -232,26 +226,27 @@ export default function PostItem({ postItem, index, darkMode }) {
                       <Lottie
                         onClick={() => likepostItem(false)}
                         loop={false}
-                        className="text-[25px]  -top-1 left-0 cursor-pointer scale-[6] w-8 absolute"
+                        className="text-[25px]   -top-1 left-0 cursor-pointer scale-[6] w-8 absolute"
                         animationData={animationData}
                       />
                     )}
                   </div>
-                  <span className="text-[#08764e] font-semibold">
+                  <span className="text-[#08764e] z-[5] font-semibold">
                     {postItem.likes.length}
                   </span>
                 </div>
               </div>
-              <div className="h-[40px]">
+              <div className="h-[40px] z-[10] ">
                 <p
                   className="text-ellipsis line-clamp-2 dark:text-[#c0bdbd]"
-                  color="gray "
+                  color="gray"
                 >
                   {postItem.message}
                 </p>
               </div>
+              {/* <dir className="w-full h-9 z-10 m-5 absolute">test</dir> */}
             </CardBody>
-            <CardFooter className="pt-1 pb-3">
+            <CardFooter className="pt-1 pb-3 z-[10]">
               <Button
                 onClick={() => seeDetails(postItem._id)}
                 size="lg"

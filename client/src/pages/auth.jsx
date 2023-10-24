@@ -91,7 +91,7 @@ export default function SignIn({ darkMode }) {
         <Typography
           className="text-center dark:text-[#eee]"
           variant="h4"
-          color={darkMode ? "" : "blue-gray"}
+          color={darkMode ? "white" : "blue-gray"}
         >
           Sign in
         </Typography>
@@ -116,7 +116,7 @@ export default function SignIn({ darkMode }) {
                 value={formik.values.email}
                 label="Email"
                 className="dark:text-[#eee]"
-                color={darkMode ? "blue-gray" : ""}
+                color={darkMode ? "blue-gray" : "gray"}
               />
             </div>
             <div className="relative">
@@ -136,7 +136,7 @@ export default function SignIn({ darkMode }) {
                 size="lg"
                 className="dark:text-[#eee]"
                 label="Password"
-                color={darkMode ? "blue-gray" : ""}
+                color={darkMode ? "blue-gray" : "gray"}
               />
               <div className={` cursor-pointer bottom-4 right-3 absolute `}>
                 {!showPassword ? (
@@ -162,7 +162,7 @@ export default function SignIn({ darkMode }) {
           </Button>
           <CustomGoogleButton login={loginWithGoogle} />
           <Typography
-            color={darkMode ? "" : "gray"}
+            color={darkMode ? "blue-gray" : "gray"}
             className="mt-4 text-center dark:text-[#cccaca] font-normal"
           >
             dont have an account?{" "}

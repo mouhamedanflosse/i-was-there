@@ -1,44 +1,38 @@
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Button,
-} from "@material-tailwind/react";
+import { Card, CardHeader, CardBody, Button } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getsimilarPost } from "../actions/posts";
-import Loader from "../assets/loader/Loader";
 import LoadingforCards from "../assets/loader/LoadingforCards";
 
 export default function HorizontalCard({ post }) {
   const { similar_posts } = useSelector((state) => state.posts);
-  const [similarPosts,setSimilarPosts] = useState(null)
-  const {loading} = useSelector((state) => state.posts)
-  const location = useLocation
+  const [similarPosts, setSimilarPosts] = useState(null);
+  const { loading } = useSelector((state) => state.posts);
+  const location = useLocation;
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
-    getMoreSimilarPosts()
-  }, [location]);
+    getMoreSimilarPosts();
+  }, [location, post._id]);
 
-  const getMoreSimilarPosts = async () =>  {
+  const getMoreSimilarPosts = async () => {
     if (post) {
-     await dispatch(getsimilarPost(post));
-    //  setSimilarPosts(similar_posts)
+      await dispatch(getsimilarPost(post));
+      //  setSimilarPosts(similar_posts)
     }
-  } 
+  };
   const seeDetails = (id) => {
     navigate(`/post/Details/${id}`);
   };
-  return (
-    loading ?  <div className="w-full mx-2 max-w-[250px] grow flex-row">
-        <LoadingforCards />
-        <LoadingforCards />
-    </div> :
-     (
-        similar_posts?.map((post,index) => (
+  return loading ? (
+    <div className="w-full mx-2 max-w-[250px] grow flex-row">
+      <LoadingforCards />
+      <LoadingforCards />
+    </div>
+  ) : (
+    similar_posts?.map((post, index) => (
       <Card key={index} className="w-full mx-2 max-w-[250px] grow flex-row">
         <CardHeader
           shadow={false}
@@ -76,7 +70,6 @@ export default function HorizontalCard({ post }) {
           </Button>
         </CardBody>
       </Card>
-      ))
-    )
+    ))
   );
 }

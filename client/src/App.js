@@ -13,6 +13,7 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/auth";
 import Details from "./pages/Details";
 import { Toaster } from "react-hot-toast";
+import PageNotFound from "./pages/PageNotFound";
 
 function App() {
   const [darkMode, setDarkMode] = useState(localStorage.getItem("dark"));
@@ -41,7 +42,7 @@ function App() {
   };
 
   return (
-    
+
       <BrowserRouter>
         <div className="">
           <Toaster
@@ -58,6 +59,7 @@ function App() {
               <Header
                 darkOrLight={darkOrLight}
                 darkMode={darkMode}
+                authData={authData}
               />
               <Routes>
                 <Route
@@ -100,6 +102,7 @@ function App() {
                     )
                   }
                 />
+                	<Route path="*" element={<PageNotFound  darkMode={darkMode}/>} />
               </Routes>
             </div>
           </div>

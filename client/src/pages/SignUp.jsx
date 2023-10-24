@@ -112,7 +112,7 @@ export default function SignUp({ darkMode }) {
   return (
     <div className="mx-auto mt-12 w-fit">
       <Card color="transparent" shadow={false}>
-      <Typography className="text-center dark:text-[#eee]" variant="h4" color={darkMode ? "" : "blue-gray"}>
+      <Typography className="text-center dark:text-[#eee]" variant="h4" color={darkMode ? "white" : "blue-gray"}>
           Sign up
         </Typography>
         <form
@@ -137,7 +137,7 @@ export default function SignUp({ darkMode }) {
                   onBlur={formik.handleBlur}
                   value={formik.values.firstName}
                   label="frist Name"
-                  color={darkMode ? "blue-gray" : ""}
+                  color={darkMode ? "blue-gray" : "gray"}
                 />
               </div>
               <div className="flex flex-col justify-between">
@@ -156,7 +156,7 @@ export default function SignUp({ darkMode }) {
                   onBlur={formik.handleBlur}
                   value={formik.values.lastName}
                   label="last Name"
-                  color={darkMode ? "blue-gray" : ""}
+                  color={darkMode ? "blue-gray" : "gray"}
                 />
               </div>
             </div>
@@ -176,7 +176,7 @@ export default function SignUp({ darkMode }) {
                 onBlur={formik.handleBlur}
                 value={formik.values.email}
                 label="Email"
-                color={darkMode ? "blue-gray" : ""}
+                color={darkMode ? "blue-gray" : "gray"}
               />
             </div>
             <div className="relative">
@@ -196,7 +196,7 @@ export default function SignUp({ darkMode }) {
                 value={formik.values.password}
                 size="lg"
                 label="Password"
-                color={darkMode ? "blue-gray" : ""}
+                color={darkMode ? "blue-gray" : "gray"}
               />
               <div className={`cursor-pointer bottom-4 right-3 absolute `}>
                 {!showPassword ? (
@@ -228,7 +228,7 @@ export default function SignUp({ darkMode }) {
                 className="dark:text-[#eee]"
                 type="password"
                 ref={cofRef}
-                color={darkMode ? "blue-gray" : ""}
+                color={darkMode ? "blue-gray" : "gray"}
               />
               <div className="w-4 h-4 bottom-4 right-3 absolute">
                 {matchedpwd === true && formik.values.passwordConfirm ? (
@@ -253,7 +253,7 @@ export default function SignUp({ darkMode }) {
           </Button>
           <CustomGoogleButton login={loginWithGoogle} />
           <Typography
-            color={darkMode ? "" : "gray"}
+            color={darkMode ? "blue-gray" : "gray"}
             className="mt-4 text-center dark:text-[#cccaca] font-normal"
           >
             already have an account?{" "}
