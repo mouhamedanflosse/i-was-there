@@ -19,6 +19,10 @@ app.use("/posts", postsRoute);
 // users route
 app.use("/users", usersRoute);
 
+app.get("/", (req,res) => {
+  res.send("app is running")
+});
+
 // error handeler
 app.use((err, req, res, next) => {
   res.status(err.status || 500);
