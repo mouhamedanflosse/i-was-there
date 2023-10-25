@@ -9,6 +9,7 @@ const app = express();
 
 app.use(cors());
 
+
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 const PORT = process.env.PORT || 5000;
@@ -37,6 +38,7 @@ app.use((err, req, res, next) => {
 //   socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
 //   family: 4 // Use IPv4, skip trying IPv6
 // };
+
 mongoose
   .connect(process.env.mongodb_URL)
   .then(() => {
