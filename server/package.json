@@ -5,7 +5,7 @@
   "main": "api/index.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon app.js",
+    "start": "nodemon api/app.js",
     "dev": "node -r dotenv/config bin/www.js"
   },
   "author": "ana",
