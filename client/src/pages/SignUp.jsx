@@ -16,7 +16,7 @@ import CustomGoogleButton from "../component/GoogleButton";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { actionType } from "../constants/actionType";
-import { signUp } from "../actions/auth";
+import { googleAuth, signUp } from "../actions/auth";
 
 export default function SignUp({ darkMode }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -84,27 +84,15 @@ export default function SignUp({ darkMode }) {
   // authenticate with google
   const loginWithGoogle = useGoogleLogin({
     onSuccess: async (response) => {
-      console.log(response.access_token);
       const profile = await fetchUserData(response.access_token);
+      navigate("/")
     },
   });
 
   // get the user data profile
   const fetchUserData = async (accessToken) => {
     try {
-      const response = await axios.get(
-        `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            Accept: "application/json",
-          },
-        }
-      );
-      dispatch({
-        type: actionType.AUTH,
-        data: { ...response.data, Token: accessToken },
-      });
+      dispatch(googleAuth({accessToken}));
     } catch (error) {
       console.error(error);
     }

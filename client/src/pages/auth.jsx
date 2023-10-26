@@ -83,8 +83,9 @@ export default function SignIn({ darkMode }) {
     } catch (error) {
       console.error(error);
     }
-  };
 
+  };
+const REACT_APP_clientId =""
   return (
     <div className="mx-auto mt-12 w-fit">
       <Card color="transparent" shadow={false}>

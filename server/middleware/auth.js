@@ -11,11 +11,6 @@ const auth = async (req, res, next) => {
       decodedData = jwt.verify(token, "test");
       req.userId = decodedData?.id;
     } catch (err) {
-      console.log("google token start");
-      decodedData = jwt.verify(token, process.env.SECRET_clien);
-      req.userId = decodedData?.sub;
-      console.log(req.userId);
-      console.log("google token end");
       console.log(err);
     }
     next();
