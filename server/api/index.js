@@ -2,8 +2,8 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import bodyParser from "body-parser";
-import postsRoute from "./routes/posts.js";
-import usersRoute from "./routes/users.js";
+import postsRoute from "../routes/posts.js"
+import usersRoute from "../routes/users.js";
 import 'dotenv/config'
 const app = express();
 
@@ -22,6 +22,7 @@ app.use("/users", usersRoute);
 app.get("/", (req,res) => {
   res.send("app is running")
 });
+
 
 // error handeler
 app.use((err, req, res, next) => {

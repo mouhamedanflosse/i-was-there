@@ -5,6 +5,7 @@ import postsContoroller from "../controllers/posts.js";
 
 const route = express.Router();
 
+
 route.get("/", postsContoroller.getPosts);
 
 route.get("/search", postsContoroller.getPostsBysearch);

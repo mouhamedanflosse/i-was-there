@@ -2,7 +2,7 @@
   "name": "back_end",
   "version": "1.0.0",
   "description": "learining Rsetful API",
-  "main": "app.js",
+  "main": "api/index.js",
   "type": "module",
   "scripts": {
     "start": "nodemon app.js",
