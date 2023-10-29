@@ -7,8 +7,10 @@ import { useLocation } from "react-router-dom";
 import Search from "../component/Search";
 import PostPagination from "../component/Pagination";
 import { getBySearch, getPosts } from "../actions/posts";
+import { useState } from "react";
 
 export default function Home({ darkMode }) {
+  const [posts, setPosts] = useState();
   const location = useLocation();
   const dispatch = useDispatch();
   const data = useSelector((state) => state.posts);
@@ -19,12 +21,29 @@ export default function Home({ darkMode }) {
   const page = Query.get("page");
   const searchQuery = Query.get("searchQuery");
   const tags = Query.get("tags");
+
+  // const postsData = async () => {
+  //   if (tags || searchQuery) {
+  //    dispatch(getBySearch({ searchQuery, tags, page }));
+  //   } else if (page) {
+  //     dispatch(getPosts(page));
+  //   }
+
+  //   if (
+  //     localStorage.getItem("profile") &&
+  //     JSON.parse(localStorage.getItem("profile"))?.exp * 1000 <
+  //       new Date().getTime()
+  //   ) {
+  //     dispatch({ type: actionType.logOut });
+  //   }
+  // }
   useEffect(() => {
     if (tags || searchQuery) {
       dispatch(getBySearch({ searchQuery, tags, page }));
     } else if (page) {
       dispatch(getPosts(page));
     }
+    setPosts(data);
     if (
       localStorage.getItem("profile") &&
       JSON.parse(localStorage.getItem("profile"))?.exp * 1000 <
@@ -35,23 +54,35 @@ export default function Home({ darkMode }) {
   }, [location, page, searchQuery, tags]);
 
   return (
-    data && (
+    posts && (
       <div className="mt-8 relative">
         <Search />
         <div className="flex justify-center relative gap-5 flex-wrap">
-          {data.posts?.map((postItem, index) => (
+          {posts.posts?.map((postItem, index) => (
             <PostItem
+              posts={posts}
               key={postItem._id}
               postItem={postItem}
+              setPosts={setPosts}
               darkMode={darkMode}
               index={index}
             />
           ))}
         </div>
-        {data.posts && (
-          <PostPagination data={data} darkMode={darkMode}  searchQuery={searchQuery} tags={tags} />
+        {posts.posts && (
+          <PostPagination
+            data={posts}
+            darkMode={darkMode}
+            searchQuery={searchQuery}
+            tags={tags}
+          />
         )}
-        <AddPlaces data={true} darkMode={darkMode} />
+        <AddPlaces
+          data={true}
+          setPosts={setPosts}
+          posts={posts}
+          darkMode={darkMode}
+        />
       </div>
     )
   );

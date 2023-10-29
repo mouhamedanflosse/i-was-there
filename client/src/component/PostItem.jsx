@@ -24,10 +24,17 @@ import AddPlaces from "./AddPlaces";
 import jwt_decode from "jwt-decode";
 import { useLocation, useNavigate } from "react-router-dom";
 
-export default function PostItem({ postItem, index, darkMode }) {
+export default function PostItem({
+  postItem,
+  index,
+  darkMode,
+  setPosts,
+  posts,
+}) {
   const [likeStatus, setlikeStatus] = useState(false);
   const [openedMenu, setOpenedMenu] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
+  const [postData, setPostData] = useState();
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
 
@@ -40,21 +47,16 @@ export default function PostItem({ postItem, index, darkMode }) {
   useEffect(() => {
     setUserProfile(JSON.parse(localStorage.getItem("profile")));
     likechecking(postItem);
+    setPostData(postItem);
   }, [location]);
 
   useEffect(() => {
-    // console.log(likeStatus);
-    // if (userProfile === null) {
-    // setTimeout(() => {
-    //   likechecking();
-    // }, 1000);
     likechecking(postItem);
-    // }
   }, [postItem]);
 
   const handleOpen = () => setOpen(!open);
 
-  // ---------------upadte post
+  // ---------------delete post
   const deletePostItem = async () => {
     try {
       handleOpen();
@@ -62,6 +64,8 @@ export default function PostItem({ postItem, index, darkMode }) {
         dispatch(deletePost(postItem._id));
       }, 500);
       setOpenedMenu(false);
+      // chexk if th fun here or somewhere else
+      setPosts(posts.map((post) => post._id !== postItem._id ? post : "" ));
     } catch (err) {
       console.log(err);
     }
@@ -77,6 +81,16 @@ export default function PostItem({ postItem, index, darkMode }) {
       ) {
         navigate("/sign-in");
       } else {
+        if (likeStatus) {
+          const postLikes = await postData.likes.filter((id) => id !== userProfile.result._id )
+          console.log(postLikes);
+          setPostData({ ...postData, likes: postLikes });
+        } else {
+          setPostData({
+            ...postData,
+            likes: [...postData.likes, userProfile.result._id],
+          });
+        }
         setlikeStatus(like);
         dispatch(likePost(postItem._id));
       }
@@ -84,6 +98,7 @@ export default function PostItem({ postItem, index, darkMode }) {
       console.log(err);
     }
   };
+
   // checking for like status
   const likechecking = async (postItem) => {
     if (!likeStatus) {
@@ -99,12 +114,13 @@ export default function PostItem({ postItem, index, darkMode }) {
     }
   };
 
+
   const seeDetails = (id) => {
     navigate(`/post/Details/${id}`);
   };
-
+  console.log(postData);
   return (
-    postItem && (
+    postData && (
       <AnimatePresence>
         <motion.div
           key={index}
@@ -125,7 +141,7 @@ export default function PostItem({ postItem, index, darkMode }) {
               updatingPost={edit}
               setEdit={setEdit}
               setOpenedMenu={setOpenedMenu}
-              post={postItem}
+              post={postData}
               UserProfile={userProfile}
             />
             <Dialog
@@ -166,15 +182,15 @@ export default function PostItem({ postItem, index, darkMode }) {
               )}
               <div className="absolute h-full w-full bg-blue-gray-900 opacity-50 "></div>
               <p className="bg-transparent absolute top-2 left-4">
-                {moment(postItem.createdAt).fromNow()}
+                {moment(postData.createdAt).fromNow()}
               </p>
               <div className="absolute items-center flex gap-1 bottom-3 left-2">
                 <div className=" flex justify-center   outline-2 outline-offset-[2px] outline-gray-900 text-white bg-[#008066] font-[540] text-[20px] items-center  relative object-cover object-center rounded-full w-7 h-7 p-0.5">
-                  {postItem.name.charAt(0)}
+                  {postData.name.charAt(0)}
                 </div>
-                <p className="text-[14px]">{postItem.name}</p>
+                <p className="text-[14px]">{postData.name}</p>
               </div>
-              <img src={postItem.selectedFile} className="w-[200px]" alt="" />
+              <img src={postData.selectedFile} className="w-[200px]" alt="" />
             </CardHeader>
             {openedMenu && (
               <motion.div
@@ -205,7 +221,7 @@ export default function PostItem({ postItem, index, darkMode }) {
               <div className="flex z-[9] items-center justify-between h-16">
                 <div className="max-h-12 z-[5] max-w-[140px]">
                   <p className="font-semibold text-ellipsis line-clamp-2 dark:text-[#eee]">
-                    #{postItem.tags.join(" #")}
+                    #{postData.tags.join(" #")}
                   </p>
                 </div>
                 <div className="flex z-[4] items-center gap-1.5 font-normal">
@@ -232,7 +248,7 @@ export default function PostItem({ postItem, index, darkMode }) {
                     )}
                   </div>
                   <span className="text-[#08764e] z-[5] font-semibold">
-                    {postItem.likes.length}
+                    {postData.likes.length}
                   </span>
                 </div>
               </div>
@@ -241,7 +257,7 @@ export default function PostItem({ postItem, index, darkMode }) {
                   className="text-ellipsis line-clamp-2 dark:text-[#c0bdbd]"
                   color="gray"
                 >
-                  {postItem.message}
+                  {postData.message}
                 </p>
               </div>
               {/* <dir className="w-full h-9 z-10 m-5 absolute">test</dir> */}

@@ -36,6 +36,7 @@ export default function Details({ UserProfile, darkMode }) {
   const [likeStatus, setlikeStatus] = useState(null);
   const [openComments, setOpenComments] = useState(false);
   const params = useParams();
+  const [postData, setPostData] = useState();
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
   const location = useLocation();
@@ -48,6 +49,7 @@ export default function Details({ UserProfile, darkMode }) {
 
   useEffect(() => {
     dispatch(getPostsById(params.id));
+    setPostData(post);
   }, [location]);
 
   const handleOpen = () => setOpen(!open);
@@ -119,6 +121,17 @@ export default function Details({ UserProfile, darkMode }) {
       ) {
         navigate("/sign-in");
       } else {
+        if (likeStatus) {
+          const postLikes = await postData.likes.filter((id) => id !== UserProfile.result._id )
+          console.log(postLikes);
+          setPostData({ ...postData, likes: postLikes });
+        } else {
+          setPostData({
+            ...postData,
+            likes: [...postData.likes, UserProfile.result._id],
+          });
+          console.log(postData)
+        }
         setlikeStatus(like);
         dispatch(likePost(post._id, "single"));
       }
@@ -127,7 +140,7 @@ export default function Details({ UserProfile, darkMode }) {
     }
   };
   return (
-    post && (
+    postData && (
       <div className="mt-5 flex justify-center items-center gap-[26px] flex-wrap">
         <Comments
           open={openComments}
@@ -182,7 +195,7 @@ export default function Details({ UserProfile, darkMode }) {
             className="Xsmd:m-0 mt-6 shadow-md shadow-black self-stretch w-64 Xsmd:shadow-none mx-auto shrink-0  Xsmd:rounded-r-none rounded-[15px}"
           >
             <img
-              src={post.selectedFile}
+              src={postData.selectedFile}
               alt="post"
               className="h-full w-full object-fill"
             />
@@ -193,9 +206,9 @@ export default function Details({ UserProfile, darkMode }) {
               color={darkMode ? "blue-gray" : "gray"}
               className="mb-4 uppercase dark:text-[#c6c2c2]"
             >
-              #{post.tags.join(" #")}
+              #{postData.tags.join(" #")}
             </Typography>
-            {post.creator === UserProfile?.result?._id && (
+            {postData.creator === UserProfile?.result?._id && (
               <IoIosMore
                 onClick={() => setOpenedMenu((prevState) => !prevState)}
                 className="absolute mt-3 z-10 top-3 right-[10px] text-[25px] cursor-pointer font-bold"
@@ -228,7 +241,7 @@ export default function Details({ UserProfile, darkMode }) {
             )}
             <Typography variant="h6" className="mb-4 uppercase">
               <span className="text-green-500">
-                posted {moment(post.createdAt).fromNow()}
+                posted {moment(postData.createdAt).fromNow()}
               </span>
             </Typography>
             <Typography
@@ -236,20 +249,20 @@ export default function Details({ UserProfile, darkMode }) {
               color={darkMode ? "gray" : "blue-gray"}
               className="mb-2  dark:text-[#c6c2c2]"
             >
-              {post.title}
+              {postData.title}
             </Typography>
             <Typography
               color={darkMode ? "blue-gray" : "gray"}
               className="mb-1 font-normal dark:text-[#a9a5a5]"
             >
-              {post.message}
+              {postData.message}
             </Typography>
             <Typography
               variant="h6"
               color="blue"
               className="mb-2 text-light-blue-800 mr-3 text-right"
             >
-              {post.name}
+              {postData.name}
             </Typography>
             <div className="flex items-center gap-5">
               <div className="flex items-center gap-1.5 font-normal">
@@ -275,7 +288,7 @@ export default function Details({ UserProfile, darkMode }) {
                     />
                   )}
                 </div>
-                <span className="text-[#08764e]">{post.likes.length}</span>
+                <span className="text-[#08764e]">{postData.likes.length}</span>
               </div>
               <AiOutlineComment
                 onClick={() => setOpenComments(true)}
@@ -297,7 +310,7 @@ export default function Details({ UserProfile, darkMode }) {
             you might also like :
           </Typography>
           <div className="flex justify-center relative overflow-hidden flex-wrap gap-4 ">
-            {post ? <MorePosts post={post} /> : <LoadingforCards />}
+            {postData ? <MorePosts post={post} /> : <LoadingforCards />}
           </div>
         </div>
       </div>

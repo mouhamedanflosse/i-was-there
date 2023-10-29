@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import * as api from "../api/index";
 import { actionType } from "../constants/actionType";
 
@@ -6,7 +7,7 @@ export const getPosts = (page) => async (dispatch) => {
   try {
     await dispatch({ type: actionType.start_loading });
     const { data } = await api.fetchPosts(page);
-    console.log(data)
+    console.log(data);
     await dispatch({ type: actionType.fetch_all, payload: data });
     await dispatch({ type: actionType.end_loading });
   } catch (err) {
@@ -64,6 +65,7 @@ export const getBySearch = (query) => async (dispatch) => {
 // craete post
 export const CreatePost = (newPosts) => async (dispatch) => {
   try {
+    
     const { data } = await api.createPosts(newPosts);
     dispatch({ type: actionType.create, payload: data });
   } catch (err) {
@@ -73,6 +75,9 @@ export const CreatePost = (newPosts) => async (dispatch) => {
 
 // delete post
 export const deletePost = (id) => async (dispatch) => {
+  const posts = useSelector((state) => state.posts)
+  const updatedPosts = posts.posts.map((post) => post._id !== id ? post : "" )
+  console.log(updatedPosts)
   try {
     const { data } = await api.DeletePost(id);
     dispatch({ type: actionType.delete, payload: data });
