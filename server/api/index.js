@@ -23,7 +23,6 @@ app.get("/", (req,res) => {
   res.send("app is running")
 });
 
-
 // error handeler
 app.use((err, req, res, next) => {
   res.status(err.status || 500);

@@ -17,11 +17,14 @@ import PageNotFound from "./pages/PageNotFound";
 
 function App() {
   const [darkMode, setDarkMode] = useState(localStorage.getItem("dark"));
+  const [userProfile, setUserProfile] = useState();
   const { authData } = useSelector((state) => state.auth);
 
 
   const user = localStorage.getItem("dark");
+
   useEffect(() => {
+    setUserProfile(JSON.parse(localStorage.getItem("profile")))
     if (user === "true") {
       setDarkMode(true);
       window.document.documentElement.classList.add("dark");
@@ -29,7 +32,8 @@ function App() {
       setDarkMode(false);
       window.document.documentElement.classList.remove("dark");
     }
-  }, []);
+  }, [authData,localStorage.getItem("profile")]);
+
 
   const darkOrLight = async (dark) => {
     setDarkMode(dark);
@@ -42,7 +46,6 @@ function App() {
   };
 
   return (
-
       <BrowserRouter>
         <div className="">
           <Toaster
@@ -59,7 +62,7 @@ function App() {
               <Header
                 darkOrLight={darkOrLight}
                 darkMode={darkMode}
-                authData={authData}
+                userProfile={userProfile}
               />
               <Routes>
                 <Route
@@ -77,14 +80,14 @@ function App() {
                 <Route
                   path="/post/Details/:id"
                   element={
-                    <Details UserProfile={authData} darkMode={darkMode} />
+                    <Details UserProfile={userProfile} darkMode={darkMode} />
                   }
                 />
 
                 <Route
                   path="/sign-in"
                   element={
-                    !authData ? (
+                    !userProfile ? (
                       <SignIn darkMode={darkMode} />
                     ) : (
                       <Navigate to="/posts" replace />
@@ -95,7 +98,7 @@ function App() {
                 <Route
                   path="/sign-up"
                   element={
-                    !authData ? (
+                    !userProfile ? (
                       <SignUp darkMode={darkMode} />
                     ) : (
                       <Navigate to="/posts" replace />

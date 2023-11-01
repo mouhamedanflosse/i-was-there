@@ -12,6 +12,7 @@ export default function Comment({
   setComment,
   setUpdating,
   user,
+  setPostData
 }) {
   const [openDelete, setopenDelete] = useState(false);
   const dispatch = useDispatch();
@@ -36,14 +37,23 @@ export default function Comment({
       return "Just now";
     }
   }
+
   const deletePostComment = (id) => {
+    setPostData({...post,
+      comments : post.comments.filter(
+        (cmt) => id !== cmt._id
+      )}
+    )
     dispatch(DeleteComment(id, post._id));
   };
+
   const upadete = () => {
+    console.log(comment._id);
+    console.log("sucsess");
     setComment(comment.commentText);
     setUpdating(comment._id);
   };
-  return (
+  return    comment && ( 
     <div className="h-fit relative">
       <div className="m-0 flex  items-center justify-start gap-2 pt-0">
         {comment.selectedFile ? (

@@ -7,22 +7,16 @@ import axios from "axios";
 const usersController = {
   signIn: async (req, res, next) => {
     const { email, password } = req.body;
-
     try {
       const result = await users.findOne({ email });
-
       if (!result) {
         throw createHttpError(404, "Email does not exist");
       }
-
       const isPasswordCorrect = await bcrypt.compare(password, result.password);
-
       if (!isPasswordCorrect) {
         throw createHttpError(401, "Incorrect password");
       }
-
       const token = generateAuthToken(result);
-
       res.status(200).json({ result, token });
     } catch (error) {
       next(error);

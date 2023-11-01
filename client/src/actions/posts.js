@@ -17,8 +17,11 @@ export const getPosts = (page) => async (dispatch) => {
 // create Comment
 export const createComment = (value) => async (dispatch) => {
   try {
+    console.log("creation")
     const { data } = await api.addComment(value);
+    console.log(data)
     await dispatch({ type: actionType.fetch_post, payload: data });
+    console.log("done")
   } catch (err) {
     console.log(err);
   }
@@ -65,7 +68,7 @@ export const getBySearch = (query) => async (dispatch) => {
 // craete post
 export const CreatePost = (newPosts) => async (dispatch) => {
   try {
-    
+
     const { data } = await api.createPosts(newPosts);
     dispatch({ type: actionType.create, payload: data });
   } catch (err) {
@@ -75,9 +78,6 @@ export const CreatePost = (newPosts) => async (dispatch) => {
 
 // delete post
 export const deletePost = (id) => async (dispatch) => {
-  const posts = useSelector((state) => state.posts)
-  const updatedPosts = posts.posts.map((post) => post._id !== id ? post : "" )
-  console.log(updatedPosts)
   try {
     const { data } = await api.DeletePost(id);
     dispatch({ type: actionType.delete, payload: data });

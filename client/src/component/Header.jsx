@@ -8,15 +8,14 @@ import { Avatar } from "@material-tailwind/react";
 import { BiLogIn } from "react-icons/bi";
 import { BsFillMoonStarsFill, BsFillSunFill } from "react-icons/bs";
 
-export default function Header({darkOrLight,darkMode,authData}) {
+export default function Header({ darkOrLight, darkMode, userProfile }) {
   const navigate = useNavigate();
-  const [UserProfile, setUserProfile] = useState(authData);
+  const [UserProfile, setUserProfile] = useState();
   const [buttonPath, setButtonPath] = useState();
   const location = useLocation();
 
-
   useEffect(() => {
-    setUserProfile(authData);
+    setUserProfile(userProfile);
     if (!UserProfile) {
       if (location.pathname === "/sign-in") {
         setButtonPath({ path: "/sign-up", name: "sign up" });
@@ -26,9 +25,7 @@ export default function Header({darkOrLight,darkMode,authData}) {
         setButtonPath({ path: "/sign-in", name: "sign in" });
       }
     }
-  }, [location,authData]);
-
-
+  }, [location, userProfile]);
   return (
     <div className={darkMode ? "dark" : ""}>
       <div className="flex bg-white dark:bg-[#291d4d] duration-300 dark:shadow-sm dark:shadow-blue-gray-700 justify-between px-4 py-1 rounded-md items-center">

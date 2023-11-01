@@ -18,18 +18,44 @@ import { useRef } from "react";
 
 export default function Comments({ open, setOpen, post,darkMode }) {
   const [comment, setComment] = useState("");
+  const [postData, setPostData] = useState("");
   const [user, setUser] = useState();
   const [upadating, setUpdating] = useState();
   const commentRef = useRef()
   const handleOpen = () => setOpen(!open);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    setPostData(post)
+    setUser(JSON.parse(localStorage.getItem("profile"))?.result);
+  }, [localStorage.getItem("profile")]);
+
   //   add comment
   const addComment = async (e) => {
     e.preventDefault()
+
+    // upadte comment 
     if (upadating) {
+        const comments  = await postData.comments.map((cmt) =>
+        cmt._id  === upadating
+          ? {...cmt,commentText : comment}
+          : cmt
+      );  
+        await setPostData({...postData,comments})
         dispatch(updateComment(upadating,{postId : post._id, commentText : comment}))
     } else {
+      console.log("creating")
+      // create new comment 
+      await setPostData({...postData, comments: [...postData.comments,
+        {
+        creator: user._id || user.id,
+        name: user.name,
+        picture: user.picture || "",
+        commentText: comment,
+        selectedFile : user.picture || null,
+        createdAt: new Date().toISOString(),
+        _id : Math.random() * 1000
+      }]})
       await dispatch(
         createComment({
           comment: {
@@ -47,16 +73,14 @@ export default function Comments({ open, setOpen, post,darkMode }) {
     setComment("");
     setUpdating(null)
   };
+
   const cancelEditing = () => {
     setUpdating(null);
     setComment("");
   };
 
-  useEffect(() => {
-    setUser(JSON.parse(localStorage.getItem("profile"))?.result);
-  }, [localStorage.getItem("profile")]);
-
   return (
+    postData &&
     <>
       <Dialog
         size="xs"
@@ -93,11 +117,12 @@ export default function Comments({ open, setOpen, post,darkMode }) {
         <DialogBody className="overflow-y-scroll noScrollBar h-96 pr-2">
           <div className="mb-6">
             <div className="mt-1 -ml-2 flex flex-col gap-1">
-              {post.comments.map((comment, index) => (
+              {postData.comments.map((comment, index) => (
                 <Comment
                   key={Math.random() * 1000}
-                  post={post}
+                  post={postData}
                   setUpdating={setUpdating}
+                  setPostData={setPostData}
                   setComment={setComment}
                   comment={comment}
                   user={user}

@@ -31,12 +31,13 @@ import { IoIosMore } from "react-icons/io";
 import { motion } from "framer-motion";
 import { TbEdit } from "react-icons/tb";
 import AddPlaces from "../component/AddPlaces";
+import infiniteLoader from "../assets/svg/Infinity-loader.svg";
 
 export default function Details({ UserProfile, darkMode }) {
   const [likeStatus, setlikeStatus] = useState(null);
   const [openComments, setOpenComments] = useState(false);
   const params = useParams();
-  const [postData, setPostData] = useState();
+  const [postData, setPostData] = useState(null);
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
   const location = useLocation();
@@ -45,12 +46,27 @@ export default function Details({ UserProfile, darkMode }) {
   // initialize useNavigate
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { post, loading } = useSelector((state) => state.posts);
+  const { post, loading, posts } = useSelector((state) => state.posts);
 
+  const getPostDeatials = async () => {
+    const postDet = await posts.find((post) => post._id === params.id);
+    setPostData(postDet);
+  };
+  // getting the data
   useEffect(() => {
     dispatch(getPostsById(params.id));
-    setPostData(post);
+    getPostDeatials();
   }, [location]);
+
+  // for upaditing the state
+  useEffect(() => {
+    getPostDeatials();
+    if (post && likeStatus === null && !loading) {
+      setTimeout(() => {
+        likechecking(post);
+      }, 200);
+    }
+  }, [post]);
 
   const handleOpen = () => setOpen(!open);
 
@@ -58,6 +74,7 @@ export default function Details({ UserProfile, darkMode }) {
     try {
       handleOpen();
       setOpenedMenu(false);
+      setPostData("");
       await dispatch(deletePost(post._id));
       setTimeout(() => {
         navigate("/");
@@ -91,14 +108,6 @@ export default function Details({ UserProfile, darkMode }) {
     );
   }
 
-  useEffect(() => {
-    if (post && likeStatus === null && !loading) {
-      setTimeout(() => {
-        likechecking(post);
-      }, 200);
-    }
-  }, [post]);
-
   // checking for like status
   const likechecking = async (post) => {
     const liked = await post.likes.find(
@@ -121,8 +130,10 @@ export default function Details({ UserProfile, darkMode }) {
       ) {
         navigate("/sign-in");
       } else {
-        if (likeStatus) {
-          const postLikes = await postData.likes.filter((id) => id !== UserProfile.result._id )
+        if (likeStatus === null || likeStatus) {
+          const postLikes = await postData.likes.filter(
+            (id) => id !== UserProfile.result._id
+          );
           console.log(postLikes);
           setPostData({ ...postData, likes: postLikes });
         } else {
@@ -130,7 +141,7 @@ export default function Details({ UserProfile, darkMode }) {
             ...postData,
             likes: [...postData.likes, UserProfile.result._id],
           });
-          console.log(postData)
+          console.log(postData);
         }
         setlikeStatus(like);
         dispatch(likePost(post._id, "single"));
@@ -139,8 +150,12 @@ export default function Details({ UserProfile, darkMode }) {
       console.log(err);
     }
   };
-  return (
+  // console.log(loading,postData)
+  return loading && !postData ? (
+    <img src={infiniteLoader} alt="loader" className="w-32 mt-44 mx-auto" />
+  ) : (
     postData && (
+      // postData &&
       <div className="mt-5 flex justify-center items-center gap-[26px] flex-wrap">
         <Comments
           open={openComments}

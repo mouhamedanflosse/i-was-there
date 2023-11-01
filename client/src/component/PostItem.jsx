@@ -23,7 +23,6 @@ import { useEffect } from "react";
 import AddPlaces from "./AddPlaces";
 import jwt_decode from "jwt-decode";
 import { useLocation, useNavigate } from "react-router-dom";
-
 export default function PostItem({
   postItem,
   index,
@@ -31,6 +30,7 @@ export default function PostItem({
   setPosts,
   posts,
 }) {
+  // const posts = useSelector((state) => state.posts)
   const [likeStatus, setlikeStatus] = useState(false);
   const [openedMenu, setOpenedMenu] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
@@ -48,7 +48,7 @@ export default function PostItem({
     setUserProfile(JSON.parse(localStorage.getItem("profile")));
     likechecking(postItem);
     setPostData(postItem);
-  }, [location]);
+  }, [location,]);
 
   useEffect(() => {
     likechecking(postItem);
@@ -81,7 +81,7 @@ export default function PostItem({
       ) {
         navigate("/sign-in");
       } else {
-        if (likeStatus) {
+        if (likeStatus === null || likeStatus ) {
           const postLikes = await postData.likes.filter((id) => id !== userProfile.result._id )
           console.log(postLikes);
           setPostData({ ...postData, likes: postLikes });
@@ -113,12 +113,9 @@ export default function PostItem({
       }
     }
   };
-
-
   const seeDetails = (id) => {
     navigate(`/post/Details/${id}`);
   };
-  console.log(postData);
   return (
     postData && (
       <AnimatePresence>

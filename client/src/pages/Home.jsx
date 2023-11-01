@@ -8,12 +8,13 @@ import Search from "../component/Search";
 import PostPagination from "../component/Pagination";
 import { getBySearch, getPosts } from "../actions/posts";
 import { useState } from "react";
+import jwt_decode from "jwt-decode";
 
 export default function Home({ darkMode }) {
-  const [posts, setPosts] = useState();
   const location = useLocation();
   const dispatch = useDispatch();
   const data = useSelector((state) => state.posts);
+  const [posts, setPosts] = useState(data);
   function useQuery() {
     return new URLSearchParams(useLocation().search);
   }
@@ -28,11 +29,28 @@ export default function Home({ darkMode }) {
   //   } else if (page) {
   //     dispatch(getPosts(page));
   //   }
-
   //   if (
   //     localStorage.getItem("profile") &&
   //     JSON.parse(localStorage.getItem("profile"))?.exp * 1000 <
   //       new Date().getTime()
+  //   ) {
+  //     dispatch({ type: actionType.logOut });
+  //   }
+  // const getPostsData = () => {
+  //   if (tags || searchQuery) {
+  //     dispatch(getBySearch({ searchQuery, tags, page }));
+  //  } else if (page) {
+  //    console.log("page "+page)
+  //    dispatch(getPosts(page));
+  //  }
+  // }
+  // const renderPostData = async () => {
+  //   await getPostsData()
+  //   setPosts(data);
+  //   if (
+  //     localStorage.getItem("profile") &&
+  //     JSON.parse(localStorage.getItem("profile"))?.exp * 1000 <
+  //     new Date().getTime()
   //   ) {
   //     dispatch({ type: actionType.logOut });
   //   }
@@ -43,18 +61,25 @@ export default function Home({ darkMode }) {
     } else if (page) {
       dispatch(getPosts(page));
     }
-    setPosts(data);
+    // console.log(jwt_decode(JSON.parse(localStorage.getItem("profile"))?.token)?.exp * 1000)
+    // console.log( new Date().getTime())
+    // console.log(jwt_decode(JSON.parse(localStorage.getItem("profile"))?.token)?.exp *
+    // 1000 >
+    // new Date().getTime())
     if (
       localStorage.getItem("profile") &&
-      JSON.parse(localStorage.getItem("profile"))?.exp * 1000 <
+      jwt_decode(JSON.parse(localStorage.getItem("profile"))?.token)?.exp *
+        1000 <
         new Date().getTime()
-    ) {
+    ){
       dispatch({ type: actionType.logOut });
     }
   }, [location, page, searchQuery, tags]);
-
+  useEffect(() => {
+    setPosts(data);
+  },[data])
   return (
-    posts && (
+    posts?.posts && (
       <div className="mt-8 relative">
         <Search />
         <div className="flex justify-center relative gap-5 flex-wrap">

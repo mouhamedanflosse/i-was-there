@@ -189,17 +189,15 @@ const postsContoroller = {
   deleteComment: async (req, res, next) => {
     const id = req.params.id;
     const { postId } = req.body;
+    
     try {
       const post = await psotsmessages.findById(postId, { __v: 0 });
-      // console.log(post)
-
       if (!post) {
         throw createHttpError(404, "post does not exist");
       }
       post.comments = await post.comments.filter(
         (comment) => id !== String(comment._id)
       );
-      // console.log(String(post.comments[5]._id))
       const updatedPost = await psotsmessages.findByIdAndUpdate(postId, post, {
         new: true,
       });

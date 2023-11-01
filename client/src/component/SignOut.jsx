@@ -37,7 +37,11 @@ export default function SignOut({ UserProfile, location }) {
   };
   // ----------useEffect
   useEffect(() => {
-    if (jwt_decode(UserProfile?.token)?.exp * 1000 < new Date().getTime()) {
+    if ( !localStorage.getItem("profile") ||
+    jwt_decode(JSON.parse(localStorage.getItem("profile"))?.token)?.exp *
+      1000 <
+      new Date().getTime()
+  ) {
       dispatch({ type: actionType.logOut });
     }
   }, [location]);

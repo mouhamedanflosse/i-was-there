@@ -15,7 +15,7 @@ export default function HorizontalCard({ post }) {
   const dispatch = useDispatch();
   useEffect(() => {
     getMoreSimilarPosts();
-  }, [location, post._id]);
+  }, [location, post?._id]);
 
   const getMoreSimilarPosts = async () => {
     if (post) {
