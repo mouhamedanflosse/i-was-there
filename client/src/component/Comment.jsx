@@ -26,7 +26,7 @@ export default function Comment({
     if (duration.asYears() >= 1) {
       return Math.floor(duration.asYears()) + "y";
     } else if (duration.asMonths() >= 1) {
-      return Math.floor(duration.asMonths()) + "m";
+      return Math.floor(duration.asMonths()) + "M";
     } else if (duration.asDays() >= 1) {
       return Math.floor(duration.asDays()) + "d";
     } else if (duration.asHours() >= 1) {
@@ -38,22 +38,20 @@ export default function Comment({
     }
   }
 
-  const deletePostComment = (id) => {
-    setPostData({...post,
+  const deletePostComment = async (id) => {
+   await setPostData({...post,
       comments : post.comments.filter(
         (cmt) => id !== cmt._id
       )}
     )
-    dispatch(DeleteComment(id, post._id));
+    dispatch(DeleteComment(id, post));
   };
 
   const upadete = () => {
-    console.log(comment._id);
-    console.log("sucsess");
     setComment(comment.commentText);
     setUpdating(comment._id);
   };
-  return    comment && ( 
+  return   comment && ( 
     <div className="h-fit relative">
       <div className="m-0 flex  items-center justify-start gap-2 pt-0">
         {comment.selectedFile ? (
@@ -65,7 +63,7 @@ export default function Comment({
             alt="tania andrew"
           />
         ) : (
-          <div className=" flex justify-center ml-[6px] mr-1 mb-2 outline  outline-2 outline-offset-[2px] outline-gray-900 dark:outline-gray-100 text-white bg-[#008066] font-[540] text-[16px] items-center  relative object-cover object-center rounded-full w-5 h-5 p-0.5">
+          <div className=" flex justify-center ml-[6px] mr-1 mb-2 outline  outline-2 outline-offset-[2px] outline-gray-900 dark:outline-gray-100 text-white bg-[#ea3a7a] font-[540] text-[16px] items-center  relative object-cover object-center rounded-full w-5 h-5 p-0.5">
             {comment.name.charAt(0)}
           </div>
         )}

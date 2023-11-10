@@ -8,6 +8,7 @@ const usersController = {
   signIn: async (req, res, next) => {
     const { email, password } = req.body;
     try {
+      console.log("seccess")
       const result = await users.findOne({ email });
       if (!result) {
         throw createHttpError(404, "Email does not exist");
@@ -49,8 +50,8 @@ const usersController = {
     }
   },
   googleAuth: async (req, res, next) => {
+    const { accessToken } = req.body;
     try {
-      const { accessToken } = req.body;
       const response = await axios.get(
         `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`,
         {

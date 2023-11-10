@@ -14,48 +14,66 @@ import { updatePost } from "../actions/posts";
 import { useDispatch } from "react-redux";
 import { VscAdd } from "react-icons/vsc";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
-export default function AddPlaces({ updatingPost, post,data,setEdit,setOpenedMenu,darkMode,path}) {
+export default function AddPlaces({
+  updatingPost,
+  post,
+  data,
+  setEdit,
+  setOpenedMenu,
+  darkMode,
+  setPosts,
+  setPostData,
+  updateType
+}) {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate()
-  // const user = UserProfile.result
   const [formData, setFormData] = useState({
     title: "",
     message: "",
     tags: [],
     selectedFile: "",
-    name : JSON.parse(localStorage.getItem("profile"))?.result?.name,
+    name: JSON.parse(localStorage.getItem("profile"))?.result?.name,
   });
   const handleOpen = () => setOpen((cur) => !cur);
 
-  const addPost = async (e) =>  {
+  const addPost = async (e) => {
     e.preventDefault();
     try {
       if (updatingPost) {
         if (!formData.selectedFile) {
-          setFormData({ ...formData, selectedFile: post.selectedFile });
+          setFormData({ ...post, selectedFile: post.selectedFile });
+        }
+        handleOpen();
+        setEdit(false);
+        setOpenedMenu(false);
+        if (updateType) {
+          setPostData(formData);
         }
         await dispatch(updatePost(formData));
-        setEdit(false)
-        handleOpen()
-        setOpenedMenu(false)
-        if (path) {
-          navigate(path)
-        }
       } else {
-        handleOpen()
+        handleOpen();
         await setTimeout(() => {
-         dispatch(CreatePost(formData,navigate));
+          setPosts((prevState) => [
+            {
+              ...formData,
+              comments: [],
+              likes: [],
+              creator: JSON.parse(localStorage.getItem("profile"))._id,
+              createdAt: new Date().toISOString(),
+              _id: Math.floor(Math.random() * 10000),
+            },
+            ...prevState,
+          ]);
+          dispatch(CreatePost(formData));
         }, 500);
         setFormData({
-        title: "",
-        message: "",
-        tags: [],
-        selectedFile: "",
-        name : JSON.parse(localStorage.getItem("profile"))?.result?.name 
-      })
+          title: "",
+          message: "",
+          tags: [],
+          selectedFile: "",
+          name: JSON.parse(localStorage.getItem("profile"))?.result?.name,
+        });
       }
     } catch (err) {
       console.log(err);
@@ -65,11 +83,13 @@ export default function AddPlaces({ updatingPost, post,data,setEdit,setOpenedMen
   useEffect(() => {
     if (updatingPost) {
       handleOpen();
-      setFormData({...post,name : JSON.parse(localStorage.getItem("profile"))?.result?.name || JSON.parse(localStorage.getItem("profile")).name });
-      // setFormData({...post,name : UserProfile?.name });
+      setFormData({
+        ...post,
+        name: JSON.parse(localStorage.getItem("profile"))?.result?.name,
+      });
     }
   }, [updatingPost]);
-  
+
   return (
     <div className="relative">
       {data && formData.name && (
@@ -89,7 +109,9 @@ export default function AddPlaces({ updatingPost, post,data,setEdit,setOpenedMen
         className="bg-transparent z-[100] shadow-none"
       >
         <Card className="mx-auto w-full dark:bg-[#1a2227] max-w-[24rem]">
-          <p className="text-center m-2 text-[22px] dark:text-[#eee]">{updatingPost ? "Edit post" : "Add post"}</p>
+          <p className="text-center m-2 text-[22px] dark:text-[#eee]">
+            {updatingPost ? "Edit post" : "Add post"}
+          </p>
           <form onSubmit={addPost}>
             <CardBody className="flex flex-col gap-4">
               <Input
@@ -144,12 +166,7 @@ export default function AddPlaces({ updatingPost, post,data,setEdit,setOpenedMen
               </div>
             </CardBody>
             <CardFooter className="pt-0 ">
-              <Button
-                variant="gradient"
-                type="submit"
-                fullWidth
-                className=""
-              >
+              <Button variant="gradient" type="submit" fullWidth className="">
                 add
               </Button>
             </CardFooter>

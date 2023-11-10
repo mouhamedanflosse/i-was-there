@@ -119,7 +119,6 @@ const postsContoroller = {
       }
       res.send(post);
     } catch (err) {
-      console.log(err.message);
       if (err instanceof mongoose.CastError) {
         next(createHttpError(422, "invalid id"));
         return;
@@ -189,7 +188,7 @@ const postsContoroller = {
   deleteComment: async (req, res, next) => {
     const id = req.params.id;
     const { postId } = req.body;
-    
+
     try {
       const post = await psotsmessages.findById(postId, { __v: 0 });
       if (!post) {

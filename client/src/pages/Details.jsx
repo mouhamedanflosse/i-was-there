@@ -31,43 +31,61 @@ import { IoIosMore } from "react-icons/io";
 import { motion } from "framer-motion";
 import { TbEdit } from "react-icons/tb";
 import AddPlaces from "../component/AddPlaces";
-import infiniteLoader from "../assets/svg/Infinity-loader.svg";
 
-export default function Details({ UserProfile, darkMode }) {
-  const [likeStatus, setlikeStatus] = useState(null);
+export default function Details({ userProfile, darkMode }) {
+  const [likeStatus, setlikeStatus] = useState(false);
   const [openComments, setOpenComments] = useState(false);
   const params = useParams();
   const [postData, setPostData] = useState(null);
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
   const location = useLocation();
-  // console.log(location.pathname);
   const [openedMenu, setOpenedMenu] = useState(false);
-  // initialize useNavigate
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { post, loading, posts } = useSelector((state) => state.posts);
+  const { post, loading, posts, similar_posts } = useSelector(
+    (state) => state.posts
+  );
 
   const getPostDeatials = async () => {
     const postDet = await posts.find((post) => post._id === params.id);
+    likechecking(postDet);
     setPostData(postDet);
-  };
-  // getting the data
-  useEffect(() => {
-    dispatch(getPostsById(params.id));
-    getPostDeatials();
-  }, [location]);
-
-  // for upaditing the state
-  useEffect(() => {
-    getPostDeatials();
-    if (post && likeStatus === null && !loading) {
-      setTimeout(() => {
-        likechecking(post);
-      }, 200);
+    if (!postDet) {
+      dispatch(getPostsById(params.id));
     }
+  };
+
+  useEffect(() => {
+    getPost();
+  }, [location, params.id]);
+
+  useEffect(() => {
+    setPostData(post);
+    likechecking(postData);
   }, [post]);
 
+  const getPost = async () => {
+    if (posts) {
+      getPostDeatials();
+    } else {
+      dispatch(getPostsById(params.id));
+    }
+  };
+  // checking for like status
+  const likechecking = async (post) => {
+    if (!likeStatus) {
+      const liked = await post?.likes.find(
+        (like) => like === userProfile?.result._id
+      );
+      if (liked) {
+        setlikeStatus(null);
+      } else {
+        setlikeStatus(false);
+      }
+    }
+  };
+  //   console.log(post,posts,similar_posts)
   const handleOpen = () => setOpen(!open);
 
   const deletePostItem = async () => {
@@ -75,17 +93,18 @@ export default function Details({ UserProfile, darkMode }) {
       handleOpen();
       setOpenedMenu(false);
       setPostData("");
-      await dispatch(deletePost(post._id));
+      await dispatch(deletePost(postData));
       setTimeout(() => {
         navigate("/");
         setTimeout(() => {
           toast.success("post deleted");
-        }, 1000);
-      }, 1000);
+        }, 500);
+      }, 200);
     } catch (err) {
       toast.success(err.response.data.error.message);
     }
   };
+
   // ------------copy link
   async function copyLink() {
     toast.promise(
@@ -108,17 +127,6 @@ export default function Details({ UserProfile, darkMode }) {
     );
   }
 
-  // checking for like status
-  const likechecking = async (post) => {
-    const liked = await post.likes.find(
-      (like) => like === UserProfile?.result?._id
-    );
-    if (liked) {
-      setlikeStatus(null);
-    } else {
-      setlikeStatus(false);
-    }
-  };
   // --------------like post
   const likepostItem = async (like) => {
     try {
@@ -132,36 +140,32 @@ export default function Details({ UserProfile, darkMode }) {
       } else {
         if (likeStatus === null || likeStatus) {
           const postLikes = await postData.likes.filter(
-            (id) => id !== UserProfile.result._id
+            (id) => id !== userProfile.result._id
           );
-          console.log(postLikes);
           setPostData({ ...postData, likes: postLikes });
         } else {
           setPostData({
             ...postData,
-            likes: [...postData.likes, UserProfile.result._id],
+            likes: [...postData.likes, userProfile.result._id],
           });
-          console.log(postData);
         }
         setlikeStatus(like);
-        dispatch(likePost(post._id, "single"));
+        dispatch(likePost(postData, "single"));
       }
     } catch (err) {
       console.log(err);
     }
   };
-  // console.log(loading,postData)
-  return loading && !postData ? (
-    <img src={infiniteLoader} alt="loader" className="w-32 mt-44 mx-auto" />
+  return loading || !postData ? (
+    <div className="bars mx-auto mt-40 "></div>
   ) : (
     postData && (
-      // postData &&
       <div className="mt-5 flex justify-center items-center gap-[26px] flex-wrap">
         <Comments
           open={openComments}
           setOpen={setOpenComments}
-          darkMode
-          post={post}
+          darkMode={darkMode}
+          post={postData}
         />
         {openedMenu && (
           <div
@@ -175,8 +179,10 @@ export default function Details({ UserProfile, darkMode }) {
           updatingPost={edit}
           setEdit={setEdit}
           setOpenedMenu={setOpenedMenu}
-          post={post}
-          UserProfile={UserProfile}
+          post={postData}
+          setPostData={setPostData}
+          UserProfile={userProfile}
+          updateType={true}
         />
         <Dialog
           className="dark:bg-[#1a2227]"
@@ -223,7 +229,7 @@ export default function Details({ UserProfile, darkMode }) {
             >
               #{postData.tags.join(" #")}
             </Typography>
-            {postData.creator === UserProfile?.result?._id && (
+            {postData.creator === userProfile?.result?._id && (
               <IoIosMore
                 onClick={() => setOpenedMenu((prevState) => !prevState)}
                 className="absolute mt-3 z-10 top-3 right-[10px] text-[25px] cursor-pointer font-bold"
@@ -325,7 +331,7 @@ export default function Details({ UserProfile, darkMode }) {
             you might also like :
           </Typography>
           <div className="flex justify-center relative overflow-hidden flex-wrap gap-4 ">
-            {postData ? <MorePosts post={post} /> : <LoadingforCards />}
+            {postData ? <MorePosts post={postData} /> : <LoadingforCards />}
           </div>
         </div>
       </div>

@@ -74,33 +74,21 @@ export default function SignUp({ darkMode }) {
     },
     onSubmit: async (values) => {
       try {
-        dispatch(signUp(values, navigate));
+        dispatch(signUp(values,navigate))
       } catch (err) {
         console.log(err);
       }
     },
   });
 
-  // authenticate with google
-  const loginWithGoogle = useGoogleLogin({
-    onSuccess: async (response) => {
-      const profile = await fetchUserData(response.access_token);
-      navigate("/")
-    },
-  });
-
-  // get the user data profile
-  const fetchUserData = async (accessToken) => {
-    try {
-      dispatch(googleAuth({accessToken}));
-    } catch (error) {
-      console.error(error);
-    }
-  };
   return (
     <div className="mx-auto mt-12 w-fit">
       <Card color="transparent" shadow={false}>
-      <Typography className="text-center dark:text-[#eee]" variant="h4" color={darkMode ? "white" : "blue-gray"}>
+        <Typography
+          className="text-center dark:text-[#eee]"
+          variant="h4"
+          color={darkMode ? "white" : "blue-gray"}
+        >
           Sign up
         </Typography>
         <form
@@ -233,13 +221,13 @@ export default function SignUp({ darkMode }) {
             </div>
           </div>
           <Button type="submit" className="mt-6" fullWidth>
-            {loading ? (
+          {loading ? (
               <Spinner className="w-6 mx-auto" color="white" />
             ) : (
               "sign up"
             )}
           </Button>
-          <CustomGoogleButton login={loginWithGoogle} />
+          <CustomGoogleButton />
           <Typography
             color={darkMode ? "blue-gray" : "gray"}
             className="mt-4 text-center dark:text-[#cccaca] font-normal"

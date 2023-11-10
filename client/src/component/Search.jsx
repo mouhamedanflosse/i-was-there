@@ -9,8 +9,6 @@ import {
 } from "@material-tailwind/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { getBySearch } from "../actions/posts";
 
 export default function Search() {
   const [open, setOpen] = useState(false);
@@ -20,23 +18,25 @@ export default function Search() {
   //   initialize useNavigate
   const navigate = useNavigate();
 
-  //   initialize useDispatch
-  const dispatch = useDispatch();
-
   // submit search
   const postSearch = (e) => {
     e?.preventDefault();
-    if (search.trim() || tags.trim()) {
+    setOpen(false)
+    if (tags.trim() || search.trim()) {
       const searchQuery = search.trim();
-      navigate(`/posts/search?searchQuery=${searchQuery || "none"}&tags=${tags}&page=1`)
-      // dispatch(getBySearch({ search: searchQuery, tags }));
+      navigate(
+        `/posts/search?searchQuery=${
+          searchQuery || "none"
+        }&tags=${tags}&page=1`
+      );
     } else {
       navigate("/");
     }
   };
 
-  // search by
+  // search by tags
   const opentags = () => setOpen((prevState) => !prevState);
+
   return (
     <form
       onSubmit={(e) => postSearch(e)}
@@ -44,7 +44,7 @@ export default function Search() {
     >
       <div className="relative w-fit">
         <input
-          className="ml-7 bg-transparent w-[230px] dark:text-[#eee] ease-in duration-200 dark:bg-[#1a1e52] border-gray-600  focus:border-black focus:w-[300px]  border-2 outline-none h-10 pl-2 pr-10 rounded-lg dark:border-gray-600"
+          className="Xxsm:ml-7 bg-transparent w-[230px] dark:text-[#eee] ease-in duration-200 dark:bg-[#1a1e52] border-gray-600  focus:border-black focus:w-[300px]  border-2 outline-none h-10 pl-2 rounded-lg dark:border-gray-600"
           type="text"
           name="query"
           placeholder="search"
@@ -58,7 +58,9 @@ export default function Search() {
       <div>
         <Popover open={open} placement="bottom">
           <PopoverHandler onClick={opentags}>
-            <Button className="py-1 h-8 dark:bg-[#1a1231] dark:border dark:border-gray-700 dark:text-[#eee] ">tags search</Button>
+            <Button className="py-1 h-8 dark:bg-[#1a1231] dark:border dark:border-gray-700 dark:text-[#eee] ">
+              tags search
+            </Button>
           </PopoverHandler>
           <PopoverContent className="max-w-96 z-[100]">
             <Typography variant="h6" color="blue-gray" className="mb-2">
@@ -70,7 +72,7 @@ export default function Search() {
                 type="text"
                 value={tags}
                 onChange={(e) => setTags(e.target.value)}
-                className="text-[#eee]"
+                className=""
               />
               <button
                 onClick={() => postSearch()}

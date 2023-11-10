@@ -6,45 +6,47 @@ import {
   DialogFooter,
 } from "@material-tailwind/react";
 import { TbLogout } from "react-icons/tb";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import jwt_decode from "jwt-decode";
 import { actionType } from "../constants/actionType";
+import { useNavigate } from "react-router-dom";
 
 export default function SignOut({ UserProfile, location }) {
   // --------------------------open popup
   const [open, setOpen] = useState(false);
 
+  // initialize useNavigate
+  const navigate = useNavigate()
+
   //---------------------------submitin state
 
   const handleOpen = () => setOpen(!open);
-
-  //---------------------------initialize useNavigate
-  const navigate = useNavigate();
 
   // ------------------logOut
   const dispatch = useDispatch();
   const logOUt = async () => {
     try {
+       setTimeout(() => {
+        handleOpen();
+      }, 700);
       await dispatch({ type: actionType.logOut });
-      handleOpen();
-      setTimeout(() => {
-        navigate("/");
-      }, 500);
+      // navigate(location.pathname + location.search)
     } catch (err) {
       console.log(err);
     }
   };
   // ----------useEffect
   useEffect(() => {
-    if ( !localStorage.getItem("profile") ||
-    jwt_decode(JSON.parse(localStorage.getItem("profile"))?.token)?.exp *
-      1000 <
-      new Date().getTime()
-  ) {
+    if (
+      !localStorage.getItem("profile") ||
+      jwt_decode(JSON.parse(localStorage.getItem("profile"))?.token).exp *
+        1000 <
+        new Date().getTime()
+    ) {
       dispatch({ type: actionType.logOut });
     }
   }, [location]);
+
   return (
     <>
       <button
@@ -56,9 +58,13 @@ export default function SignOut({ UserProfile, location }) {
       </button>
       <Dialog
         open={open}
-        className="dark:bg-[#1a2227]"
+        className="dark:bg-[#1a2227] duration-75"
         size="xs"
         handler={handleOpen}
+        animate={{
+            mount: { scale: 1, y: 0 },
+            unmount: { scale: 0.9, y: -100 },
+          }}
       >
         <DialogHeader className="dark:text-[#dad4d4]">
           sure you want to log out

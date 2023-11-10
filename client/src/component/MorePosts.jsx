@@ -20,13 +20,13 @@ export default function HorizontalCard({ post }) {
   const getMoreSimilarPosts = async () => {
     if (post) {
       await dispatch(getsimilarPost(post));
-      //  setSimilarPosts(similar_posts)
+       setSimilarPosts(similar_posts)
     }
   };
   const seeDetails = (id) => {
     navigate(`/post/Details/${id}`);
   };
-  return loading ? (
+  return !similarPosts ? (
     <div className="w-full mx-2 max-w-[250px] grow flex-row">
       <LoadingforCards />
       <LoadingforCards />

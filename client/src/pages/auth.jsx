@@ -13,7 +13,6 @@ import { useGoogleLogin } from "@react-oauth/google";
 import CustomGoogleButton from "../component/GoogleButton";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { actionType } from "../constants/actionType";
 import { signIn } from "../actions/auth";
 import { googleAuth } from "../actions/auth";
 
@@ -47,7 +46,7 @@ export default function SignIn({ darkMode }) {
     },
     onSubmit: async (values) => {
       try {
-        dispatch(signIn(values, navigate));
+        dispatch(signIn(values, navigate))
       } catch (err) {
         console.log(err);
       }
@@ -60,31 +59,15 @@ export default function SignIn({ darkMode }) {
       navigate("/");
     },
   });
-
   // get the user data profile
   const fetchUserData = async (accessToken) => {
     try {
-      // const response = await axios.get(
-      //   `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`,
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${accessToken}`,
-      //       Accept: "application/json",
-      //     },
-      //   }
-      // );
-      dispatch(googleAuth({accessToken}));
-      // dispatch(googleAuth({user : {...response.data, token: accessToken}}));
-      // console.log({ ...response.data, token: accessToken});
-      // dispatch({
-      //   type: actionType.AUTH,
-      //   data: { result: response.data, token: accessToken },
-      // });
-    } catch (error) {
-      console.error(error);
+      dispatch(googleAuth({accessToken}))
+    } catch(err) {
+      console.log(err)
     }
+  }
 
-  };
   return (
     <div className="mx-auto mt-12 w-fit">
       <Card color="transparent" shadow={false}>
@@ -160,7 +143,7 @@ export default function SignIn({ darkMode }) {
               "sign in"
             )}
           </Button>
-          <CustomGoogleButton login={loginWithGoogle} />
+          <CustomGoogleButton login={loginWithGoogle}/>
           <Typography
             color={darkMode ? "blue-gray" : "gray"}
             className="mt-4 text-center dark:text-[#cccaca] font-normal"

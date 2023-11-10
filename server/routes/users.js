@@ -10,4 +10,5 @@ route.post("/signUp", usersContoroller.signUp);
 route.post("/googleAuth", usersContoroller.googleAuth);
 
 
+
 export default route;

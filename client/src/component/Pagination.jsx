@@ -1,23 +1,43 @@
 import { Pagination } from "@mui/material";
+import { useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
 export default function PostPagination({ data, tags, searchQuery, darkMode }) {
   const navigate = useNavigate();
+  const [currentPage,setCurrentPage] = useState(data.currentPage)
+  const [numberOfpages,setNumberOfpages] = useState(data.numberOfpages)
+  const [ready,setReady] = useState(false)
+
+  useEffect(() => {
+    setCurrentPage(data.currentPage)
+    setNumberOfpages(data.numberOfpages)
+  },[data])
+
+  useEffect(() => {
+    setTimeout(() => {
+        setReady(true)
+    }, 300);
+  },[])
+
   const handleChange = async (event, value) => {
     if (tags || searchQuery) {
-      navigate(
-        `/posts/search?searchQuery=${
-          searchQuery || "none"
-        }&tags=${tags}&page=${value}`
-      );
+     await setCurrentPage(value)
+        navigate(
+          `/posts/search?searchQuery=${
+            searchQuery || "none"
+          }&tags=${tags}&page=${value}`
+        );
     } else {
-      navigate(`/posts?page=${value}`);
+   await setCurrentPage(value)
+    navigate(`/posts?page=${value}`);
     }
   };
   return (
+    ready &&
     <Pagination
-      count={data.numberOfpages}
-      page={data.currentPage}
-      // defaultPage={}
+      count={numberOfpages}
+      page={currentPage}
       className={darkMode ? "darkPagination" : ""}
       variant="outlined"
       color={darkMode ? "secondary" : "primary"}

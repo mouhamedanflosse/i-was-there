@@ -1,11 +1,12 @@
 import jwt from "jsonwebtoken";
+import createHttpError from "http-errors";
 
 const auth = async (req, res, next) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
     let decodedData;
     if (!token) {
-      throw new Error("unathorited");
+      throw createHttpError(401,"unathorized")
     }
     try {
       decodedData = jwt.verify(token, "test");
@@ -15,7 +16,7 @@ const auth = async (req, res, next) => {
     }
     next();
   } catch (err) {
-    console.log(err);
+    next()
   }
 };
 
