@@ -4,7 +4,7 @@
 
 ## ✅Features
 
-📌 CRUD operations for managing posts
+-📌 CRUD operations for managing posts
 📌 Robust routing system
 📌 Dual search capabilities using hashtags and keywords
 📌 Dark and light modes for user preference
