@@ -31,14 +31,14 @@ The application was developed using a variety of technologies including:
 
 Through the development of this project, I gained:
 
-📌 A comprehensive understanding of the MERN stack.
-📌 A better understanding of Redux and Redux-thunk, which improved my ability to manage application state effectively.
-📌 A better organization of folder structure, which is critical for maintaining a clean and scalable codebase.
-📌 A knowledge of implementing RESTful APIs using ExpressJS.
-📌 Experience in implementing an organized backend folder structure (routes, controllers, middleware, models, initDB file).
-📌 Experience in implementing private route backend/frontend.
-📌 Proficiency in using MongoDB services (MongoDB Compass / MongoDB Atlas).
-📌 A better understanding of how data exchange between the client and server sides works.
+-📌 A comprehensive understanding of the MERN stack.
+-📌 A better understanding of Redux and Redux-thunk, which improved my ability to manage application state effectively.
+-📌 A better organization of folder structure, which is critical for maintaining a clean and scalable codebase.
+-📌 A knowledge of implementing RESTful APIs using ExpressJS.
+-📌 Experience in implementing an organized backend folder structure (routes, controllers, middleware, models, initDB file).
+-📌 Experience in implementing private route backend/frontend.
+-📌 Proficiency in using MongoDB services (MongoDB Compass / MongoDB Atlas).
+-📌 A better understanding of how data exchange between the client and server sides works.
 
 ## Contribution
 
