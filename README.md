@@ -14,7 +14,7 @@
 
 ## 🛠Technologies
 
-The application was developed using a variety of technologies including:
+📌The application was developed using a variety of technologies including:
 
 - ReactJS
 - ExpressJS
