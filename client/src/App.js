@@ -19,7 +19,7 @@ function App() {
 
   useEffect(() => {
     setUserProfile(JSON.parse(localStorage.getItem("profile")));
-    if (user === "true") {
+    if (user === "true" || user === null) {
       setDarkMode(true);
       window.document.documentElement.classList.add("dark");
     } else {
@@ -50,12 +50,12 @@ function App() {
           },
         }}
       />
-      <div className="max-w-6xl w-full mx-auto">
         <Header
           darkMode={darkMode}
           darkOrLight={darkOrLight}
           userProfile={userProfile}
         />
+      <div className="max-w-6xl w-full mx-auto">
         <Routes>
           {/* -----------------home route */}
           <Route path="/" element={<Navigate to="/posts?page=1" />} />

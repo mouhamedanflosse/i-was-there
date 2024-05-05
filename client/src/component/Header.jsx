@@ -28,7 +28,8 @@ export default function Header({ darkOrLight, darkMode, userProfile }) {
   }, [location, userProfile]);
   
   return (
-    <div className="flex bg-white dark:bg-[#291d4d] duration-300 dark:shadow-sm dark:shadow-blue-gray-700 justify-between px-4 py-1 rounded-md items-center">
+    <div className="w-full dark:shadow-blue-gray-700 dark:border-b duration-300 dark:border-[#45347b] dark:shadow-sm bg-white dark:bg-[#291d4d]">
+    <div className="flex max-w-6xl mx-auto bg-white dark:bg-[#291d4d]   justify-between px-4 py-1 items-center">
       <img
         onClick={() => navigate("/")}
         src={logo}
@@ -75,6 +76,7 @@ export default function Header({ darkOrLight, darkMode, userProfile }) {
           </button>
         )}
       </div>
+    </div>
     </div>
   );
 }
