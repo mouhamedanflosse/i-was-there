@@ -112,8 +112,8 @@ export default function PostItem({ postItem, index, darkMode, posts }) {
         <motion.div
           key={index}
           transition={{ delay: 0.1 * index >= 1 ? 1 : 0.1 * index }}
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, }}
+          animate={{ opacity: 1, }}
           // exit={{opacity: 0, scale: 0}}
         >
           {openedMenu && (
